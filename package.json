@@ -1,0 +1,37 @@
+{
+  "name": "@quantumaudio/ableton-extension-sdk",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "description": "HTML/CSS/JS UI primitives and theming for QuantumAudio Ableton extensions.",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./vue": {
+      "types": "./src/components/index.ts",
+      "default": "./src/components/index.ts"
+    },
+    "./theme.css": "./src/theme/theme.css",
+    "./button.css": "./src/components/button.css",
+    "./slider.css": "./src/components/slider.css",
+    "./label.css": "./src/components/label.css",
+    "./layout.css": "./src/components/layout.css",
+    "./styles.css": "./src/styles.css"
+  },
+  "scripts": {
+    "typecheck": "vue-tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=24.14.1"
+  },
+  "peerDependencies": {
+    "vue": "^3.5.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "vue": "^3.5.13",
+    "vue-tsc": "^2.2.8"
+  }
+}

@@ -1,0 +1,3 @@
+.qa-icon {
+  stroke-width: var(--qa-icon-stroke-width, 1);
+}

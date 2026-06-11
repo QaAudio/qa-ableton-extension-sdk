@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" class="qa-root" data-qa-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QA Extension SDK — Examples</title>
+    <link rel="stylesheet" href="../src/styles.css" />
+    <link rel="stylesheet" href="./shared/layout.css" />
+  </head>
+  <body class="demo-body">
+    <header class="demo-header">
+      <h1 class="demo-title">QuantumAudio Extension SDK examples</h1>
+      <nav class="demo-nav" aria-label="Examples">
+        <a href="./index.html" aria-current="page">Overview</a>
+        <a href="./buttons.html">Buttons</a>
+        <a href="./toolbar.html">Toolbar</a>
+        <a href="./sliders.html">Sliders</a>
+        <a href="./dialog.html">Dialog</a>
+        <a href="./parameter-panel.html">Parameter panel</a>
+        <a href="./theme-toggle.html">Theme toggle</a>
+      </nav>
+    </header>
+
+    <p>Static HTML demos using Ableton Live styling from the official Extensions SDK tokens.</p>
+
+    <section class="demo-section">
+      <h2>Quick preview</h2>
+      <div class="demo-panel demo-stack">
+        <div class="qa-button-group qa-button-group--end">
+          <button type="button" class="qa-button">Cancel</button>
+          <button type="button" class="qa-button">OK</button>
+        </div>
+        <label class="qa-label" for="preview-gain">
+          <span class="qa-label__text">Gain</span>
+          <input
+            class="qa-slider"
+            type="range"
+            id="preview-gain"
+            min="0"
+            max="100"
+            value="65"
+            style="--qa-slider-fill: 65%"
+          />
+        </label>
+      </div>
+    </section>
+
+    <section class="demo-section">
+      <h2>Pages</h2>
+      <ul class="demo-stack">
+        <li><a href="./buttons.html">Buttons</a> — pill buttons, groups, pressed state</li>
+        <li><a href="./sliders.html">Sliders</a> — horizontal range controls with value readout</li>
+        <li><a href="./dialog.html">Dialog</a> — modal-style form like the SDK rename clip example</li>
+        <li><a href="./parameter-panel.html">Parameter panel</a> — grouped labels, sliders, and actions</li>
+        <li><a href="./theme-toggle.html">Theme toggle</a> — switch between Live dark and light tokens</li>
+      </ul>
+    </section>
+  </body>
+</html>

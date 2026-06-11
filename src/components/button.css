@@ -1,0 +1,76 @@
+/* Ableton Live pill button — from Extensions SDK modal-dialog example. */
+
+.qa-button {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  line-height: 1;
+  background-color: var(--c-control-bg--500);
+  color: var(--c-text-primary);
+  border: 1px solid var(--c-control-border);
+  padding: 0 0.75em;
+  border-radius: 1em;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.qa-button:hover {
+  background-color: var(--c-control-bg--400);
+}
+
+.qa-button:active,
+.qa-button[aria-pressed="true"] {
+  color: var(--c-control-on-foreground);
+  background-color: var(--c-highlight--primary);
+}
+
+.qa-button:focus {
+  outline: 2px solid var(--c-control-outline);
+  outline-offset: 0;
+}
+
+.qa-button:disabled {
+  opacity: 0.45;
+  cursor: default;
+  pointer-events: none;
+}
+
+.qa-button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.qa-button-group--end {
+  justify-content: flex-end;
+}
+
+.qa-button-group .qa-button {
+  border-radius: 0;
+}
+
+.qa-icon-button {
+  width: 1.75rem;
+  height: 1.75rem;
+  min-width: 1.75rem;
+  padding: 0;
+  border-radius: 0.35rem;
+}
+
+.qa-icon-button svg {
+  display: block;
+  flex-shrink: 0;
+}
+
+.qa-icon-loader {
+  animation: qa-spin 0.8s linear infinite;
+}
+
+@keyframes qa-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

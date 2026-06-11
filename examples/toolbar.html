@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" class="qa-root" data-qa-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Toolbar — QA Extension SDK</title>
+    <link rel="stylesheet" href="../src/styles.css" />
+    <link rel="stylesheet" href="./shared/layout.css" />
+  </head>
+  <body class="demo-body">
+    <header class="demo-header">
+      <h1 class="demo-title">Toolbar</h1>
+      <nav class="demo-nav" aria-label="Examples">
+        <a href="./index.html">Overview</a>
+        <a href="./buttons.html">Buttons</a>
+        <a href="./toolbar.html" aria-current="page">Toolbar</a>
+        <a href="./dialog.html">Dialog</a>
+        <a href="./theme-toggle.html">Theme toggle</a>
+      </nav>
+    </header>
+
+    <section class="demo-panel demo-stack">
+      <div class="qa-toolbar">
+        <div class="qa-button-group">
+          <button type="button" class="qa-button qa-button--highlight" data-active="true">Link</button>
+          <button type="button" class="qa-button qa-button--highlight">Sync</button>
+          <button type="button" class="qa-button">Fetch</button>
+        </div>
+        <div class="qa-toolbar__grow">
+          <div class="qa-autocomplete">
+            <input
+              class="qa-input"
+              type="text"
+              placeholder="Select a project…"
+              value="my-project"
+            />
+          </div>
+        </div>
+      </div>
+
+      <p class="qa-status">
+        <span class="qa-badge qa-badge--highlight">3</span>
+        pending changes
+      </p>
+    </section>
+  </body>
+</html>

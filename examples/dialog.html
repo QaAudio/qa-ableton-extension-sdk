@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" class="qa-root" data-qa-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dialog — QA Extension SDK</title>
+    <link rel="stylesheet" href="../src/styles.css" />
+    <link rel="stylesheet" href="./shared/layout.css" />
+    <style>
+      .dialog-shell {
+        min-height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5em;
+      }
+
+      .dialog-form {
+        width: min(100%, 18rem);
+      }
+
+      .qa-input {
+        font-size: 1rem;
+        line-height: 1.5;
+        background-color: var(--c-input-bg-500);
+        color: var(--c-text-primary);
+        border: 1px solid var(--c-control-border);
+        height: 20px;
+        padding: 0 0.33em;
+        outline-offset: 0;
+        width: 100%;
+      }
+
+      .qa-input::placeholder {
+        color: var(--c-text-secondary);
+      }
+
+      .qa-input:focus {
+        border-color: var(--c-control-border);
+        outline: 2px solid var(--c-control-outline);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dialog-shell">
+      <form class="dialog-form demo-stack" id="rename-form">
+        <label class="qa-label" for="name">
+          <span class="qa-label__text">Rename your clip</span>
+          <input
+            class="qa-input"
+            type="text"
+            id="name"
+            name="name"
+            placeholder="New clip name…"
+            autocomplete="off"
+          />
+        </label>
+        <div class="qa-button-group qa-button-group--end">
+          <button type="button" class="qa-button" id="cancel">Cancel</button>
+          <button type="submit" class="qa-button">OK</button>
+        </div>
+        <output id="result" class="qa-label__hint" for="name"></output>
+      </form>
+    </div>
+
+    <script>
+      const form = document.getElementById("rename-form");
+      const nameInput = document.getElementById("name");
+      const result = document.getElementById("result");
+
+      nameInput.focus();
+
+      document.getElementById("cancel").addEventListener("click", () => {
+        result.textContent = "Cancelled (no payload sent).";
+      });
+
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const payload = { name: nameInput.value.trim() || null };
+        result.textContent = `Would close dialog with: ${JSON.stringify(payload)}`;
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+          result.textContent = "Cancelled (Escape).";
+        }
+      });
+    </script>
+  </body>
+</html>

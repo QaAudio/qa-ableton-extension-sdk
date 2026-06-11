@@ -1,0 +1,31 @@
+.qa-window-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.1rem;
+  -webkit-app-region: no-drag;
+}
+
+.qa-window-controls__btn.qa-button {
+  width: 1.6rem;
+  height: 1.5rem;
+  min-width: 1.6rem;
+  border: none;
+  border-radius: 0.25rem;
+  background-color: transparent;
+  color: var(--c-text-secondary);
+}
+
+.qa-window-controls__btn.qa-button:hover {
+  background-color: var(--c-control-bg--400);
+  color: var(--c-text-primary);
+}
+
+.qa-window-controls__btn.qa-button:active {
+  background-color: var(--c-control-bg--400);
+  color: var(--c-text-primary);
+}
+
+.qa-window-controls__btn--close.qa-button:hover {
+  background-color: var(--c-highlight--primary);
+  color: var(--c-control-on-foreground);
+}

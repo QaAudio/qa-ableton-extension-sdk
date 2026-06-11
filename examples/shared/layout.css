@@ -1,0 +1,67 @@
+/* Example gallery layout only — not part of the SDK surface. */
+
+.demo-body {
+  min-height: 100%;
+  padding: 1.5em;
+}
+
+.demo-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75em;
+  margin-bottom: 1.25em;
+}
+
+.demo-title {
+  font-size: 1.15rem;
+}
+
+.demo-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+}
+
+.demo-nav a {
+  color: var(--c-text-secondary);
+  text-decoration: none;
+}
+
+.demo-nav a:hover,
+.demo-nav a[aria-current="page"] {
+  color: var(--c-highlight--primary);
+}
+
+.demo-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75em;
+  max-width: 28rem;
+}
+
+.demo-section + .demo-section {
+  margin-top: 1.5em;
+  padding-top: 1.5em;
+  border-top: 1px solid var(--c-control-border);
+}
+
+.demo-section h2 {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--c-text-primary);
+}
+
+.demo-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.demo-panel {
+  width: min(100%, 22rem);
+  padding: 1em;
+  border: 1px solid var(--c-control-border);
+  background-color: var(--c-control-bg--500);
+}

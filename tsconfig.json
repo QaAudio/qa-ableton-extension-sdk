@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "module": "nodenext",
+    "target": "esnext",
+    "moduleResolution": "nodenext",
+    "moduleDetection": "force",
+    "esModuleInterop": true,
+    "strict": true,
+    "noEmit": true,
+    "rootDir": "./src",
+    "lib": ["ESNext", "DOM", "DOM.Iterable"]
+  },
+  "include": ["src/**/*.ts", "src/**/*.vue"]
+}

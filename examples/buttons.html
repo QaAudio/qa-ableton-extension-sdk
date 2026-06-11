@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" class="qa-root" data-qa-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Buttons — QA Extension SDK</title>
+    <link rel="stylesheet" href="../src/styles.css" />
+    <link rel="stylesheet" href="./shared/layout.css" />
+  </head>
+  <body class="demo-body">
+    <header class="demo-header">
+      <h1 class="demo-title">Buttons</h1>
+      <nav class="demo-nav" aria-label="Examples">
+        <a href="./index.html">Overview</a>
+        <a href="./buttons.html" aria-current="page">Buttons</a>
+        <a href="./sliders.html">Sliders</a>
+        <a href="./dialog.html">Dialog</a>
+        <a href="./parameter-panel.html">Parameter panel</a>
+        <a href="./theme-toggle.html">Theme toggle</a>
+      </nav>
+    </header>
+
+    <section class="demo-section">
+      <h2>Default pill button</h2>
+      <button type="button" class="qa-button">Process</button>
+    </section>
+
+    <section class="demo-section">
+      <h2>Dialog action row</h2>
+      <p>Use verb labels; keep <code>Cancel</code> consistent across dialogs.</p>
+      <div class="qa-button-group qa-button-group--end">
+        <button type="button" class="qa-button">Cancel</button>
+        <button type="button" class="qa-button">Rename</button>
+      </div>
+    </section>
+
+    <section class="demo-section">
+      <h2>Pressed / toggle state</h2>
+      <p>For on/off parameters prefer <code>aria-pressed</code> instead of a second button style.</p>
+      <button type="button" class="qa-button" aria-pressed="true">Loop</button>
+      <button type="button" class="qa-button" aria-pressed="false">Loop</button>
+    </section>
+
+    <section class="demo-section">
+      <h2>Disabled</h2>
+      <button type="button" class="qa-button" disabled>Unavailable</button>
+    </section>
+  </body>
+</html>

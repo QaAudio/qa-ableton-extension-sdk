@@ -1,0 +1,50 @@
+/*
+ * Ableton Live design tokens.
+ * Dark values match the official Extensions SDK modal-dialog example.
+ * Light values mirror the same token roles for Live's light appearance.
+ */
+
+:root,
+:root[data-qa-theme="dark"] {
+  --p-live-ui-bg: hsl(0, 0%, 21%);
+  --p-live-control-bg: hsl(0, 0%, 16%);
+  --p-live-input-bg: hsl(0, 0%, 12%);
+  --p-live-text-primary: hsl(0, 0%, 71%);
+  --p-live-control-border: hsl(0, 0%, 7%);
+  --p-live-text-secondary: hsl(0, 0%, 41%);
+  --p-live-accent-primary: hsl(31, 100%, 67%);
+  --p-live-control-text--enabled: hsl(0, 0%, 7%);
+
+  --c-bg--0500: oklch(from var(--p-live-ui-bg) l c h);
+  --c-text-primary: oklch(from var(--p-live-text-primary) l c h);
+  --c-text-secondary: oklch(from var(--p-live-text-secondary) l c h);
+  --c-control-bg--400: oklch(from var(--p-live-control-bg) calc(l * 0.9) c h);
+  --c-control-bg--500: oklch(from var(--p-live-control-bg) l c h);
+  --c-control-border: oklch(from var(--p-live-control-border) l c h);
+  --c-control-outline: var(--c-text-secondary);
+  --c-control-on-foreground: oklch(from var(--p-live-control-text--enabled) l c h);
+  --c-input-bg-500: oklch(from var(--p-live-input-bg) l c h);
+  --c-highlight--primary: oklch(from var(--p-live-accent-primary) l c h);
+}
+
+:root[data-qa-theme="light"] {
+  --p-live-ui-bg: hsl(0, 0%, 86%);
+  --p-live-control-bg: hsl(0, 0%, 78%);
+  --p-live-input-bg: hsl(0, 0%, 94%);
+  --p-live-text-primary: hsl(0, 0%, 20%);
+  --p-live-control-border: hsl(0, 0%, 62%);
+  --p-live-text-secondary: hsl(0, 0%, 42%);
+  --p-live-accent-primary: hsl(31, 100%, 47%);
+  --p-live-control-text--enabled: hsl(0, 0%, 7%);
+
+  --c-bg--0500: oklch(from var(--p-live-ui-bg) l c h);
+  --c-text-primary: oklch(from var(--p-live-text-primary) l c h);
+  --c-text-secondary: oklch(from var(--p-live-text-secondary) l c h);
+  --c-control-bg--400: oklch(from var(--p-live-control-bg) calc(l * 0.96) c h);
+  --c-control-bg--500: oklch(from var(--p-live-control-bg) l c h);
+  --c-control-border: oklch(from var(--p-live-control-border) l c h);
+  --c-control-outline: var(--c-text-secondary);
+  --c-control-on-foreground: oklch(from var(--p-live-control-text--enabled) l c h);
+  --c-input-bg-500: oklch(from var(--p-live-input-bg) l c h);
+  --c-highlight--primary: oklch(from var(--p-live-accent-primary) l c h);
+}
