@@ -1,0 +1,66 @@
+.qa-fader {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25em;
+  user-select: none;
+}
+
+.qa-fader__track-wrap {
+  position: relative;
+  width: 1.25rem;
+  cursor: ns-resize;
+  touch-action: none;
+  outline: none;
+}
+
+.qa-fader__track-wrap:focus-visible {
+  outline: 2px solid var(--c-control-outline);
+  outline-offset: 2px;
+}
+
+.qa-fader__track-wrap--disabled {
+  opacity: 0.45;
+  cursor: default;
+  pointer-events: none;
+}
+
+.qa-fader__track {
+  position: relative;
+  width: 4px;
+  margin: 0 auto;
+  background: var(--c-control-border);
+  border: 1px solid var(--c-control-border);
+  box-shadow: inset 0 1px 0 color-mix(in oklch, var(--c-text-primary) 8%, transparent);
+}
+
+.qa-fader__fill {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--c-highlight--primary);
+  pointer-events: none;
+}
+
+.qa-fader__tick {
+  position: absolute;
+  left: -3px;
+  right: -3px;
+  height: 1px;
+  background: var(--c-control-border);
+  pointer-events: none;
+}
+
+.qa-fader__thumb {
+  position: absolute;
+  left: 50%;
+  width: 18px;
+  height: 8px;
+  margin-left: -9px;
+  margin-top: -4px;
+  background: var(--c-control-bg--400);
+  border: 1px solid var(--c-control-border);
+  box-shadow: inset 0 1px 0 color-mix(in oklch, var(--c-text-primary) 12%, transparent);
+  pointer-events: none;
+}

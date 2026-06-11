@@ -1,0 +1,104 @@
+.qa-meter {
+  display: inline-flex;
+  gap: 2px;
+  align-items: flex-end;
+}
+
+.qa-meter--horizontal {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.qa-meter--horizontal .qa-meter__channels {
+  flex-direction: column;
+}
+
+.qa-meter__channels {
+  display: flex;
+  gap: 2px;
+  align-items: flex-end;
+}
+
+.qa-meter__channel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.qa-meter__track {
+  position: relative;
+  overflow: hidden;
+  background: var(--c-input-bg-500);
+  border: 1px solid var(--c-control-border);
+}
+
+.qa-meter--vertical .qa-meter__track {
+  width: 100%;
+}
+
+.qa-meter--horizontal .qa-meter__track {
+  height: 100%;
+}
+
+.qa-meter__gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    var(--c-meter-low) 0%,
+    var(--c-meter-low) 70%,
+    var(--c-meter-high) 85%,
+    var(--c-clip) 100%
+  );
+  pointer-events: none;
+}
+
+.qa-meter--horizontal .qa-meter__gradient {
+  background: linear-gradient(
+    to right,
+    var(--c-meter-low) 0%,
+    var(--c-meter-low) 70%,
+    var(--c-meter-high) 85%,
+    var(--c-clip) 100%
+  );
+}
+
+.qa-meter__fill {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transform-origin: bottom center;
+  background: color-mix(in oklch, var(--c-text-primary) 15%, transparent);
+  pointer-events: none;
+}
+
+.qa-meter--horizontal .qa-meter__fill {
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: auto;
+  width: 100%;
+  transform-origin: left center;
+}
+
+.qa-meter__clip {
+  flex-shrink: 0;
+  background: var(--c-control-border);
+}
+
+.qa-meter__clip--lit {
+  background: var(--c-clip);
+}
+
+.qa-meter--vertical .qa-meter__clip {
+  width: 100%;
+  height: 3px;
+}
+
+.qa-meter--horizontal .qa-meter__clip {
+  height: 100%;
+  width: 3px;
+  align-self: stretch;
+}

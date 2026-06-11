@@ -1,0 +1,69 @@
+<script setup lang="ts">
+import { onMounted, onUnmounted, ref, watch } from "vue";
+import { drawWaveform } from "../audio/waveform-draw.js";
+
+/** Compact waveform thumbnail for lists and browsers. */
+const props = withDefaults(
+  defineProps<{
+    peaks: number[];
+    height?: number;
+    color?: string;
+  }>(),
+  {
+    height: 24,
+    color: "var(--c-waveform)",
+  },
+);
+
+const rootRef = ref<HTMLElement | null>(null);
+const canvasRef = ref<HTMLCanvasElement | null>(null);
+let resizeObserver: ResizeObserver | null = null;
+let themeObserver: MutationObserver | null = null;
+
+function redraw(): void {
+  const canvas = canvasRef.value;
+  const root = rootRef.value;
+  if (!canvas || !root) return;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+  drawWaveform(canvas, ctx, {
+    peaks: props.peaks,
+    width: root.clientWidth,
+    height: props.height,
+    color: props.color,
+    showPlayhead: false,
+  });
+}
+
+onMounted(() => {
+  redraw();
+  if (rootRef.value) {
+    resizeObserver = new ResizeObserver(() => redraw());
+    resizeObserver.observe(rootRef.value);
+  }
+  themeObserver = new MutationObserver(() => redraw());
+  themeObserver.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["data-qa-theme"],
+  });
+});
+
+onUnmounted(() => {
+  resizeObserver?.disconnect();
+  themeObserver?.disconnect();
+});
+
+watch(() => [props.peaks, props.height, props.color], () => redraw(), { deep: true });
+</script>
+
+<template>
+  <div
+    ref="rootRef"
+    class="qa-waveform-thumb"
+    :style="{ height: `${height}px` }"
+    role="img"
+    aria-label="Waveform preview"
+  >
+    <canvas ref="canvasRef" class="qa-waveform-thumb__canvas" :height="height" aria-hidden="true" />
+  </div>
+</template>

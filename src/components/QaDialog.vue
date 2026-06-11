@@ -60,7 +60,7 @@ onUnmounted(() => {
 
 .qa-dialog {
   width: min(100%, 22rem);
-  background: var(--c-panel-bg, var(--c-input-bg-500));
+  background: var(--c-panel-bg);
   border: 1px solid var(--c-control-border);
   display: flex;
   flex-direction: column;

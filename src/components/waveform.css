@@ -1,0 +1,32 @@
+.qa-waveform {
+  position: relative;
+  width: 100%;
+  background: var(--c-input-bg-500);
+  border: 1px solid var(--c-control-border);
+}
+
+.qa-waveform__canvas {
+  display: block;
+  width: 100%;
+}
+
+.qa-waveform--interactive {
+  cursor: crosshair;
+}
+
+.qa-waveform--interactive:focus-visible {
+  outline: 2px solid var(--c-control-outline);
+  outline-offset: 0;
+}
+
+.qa-waveform-thumb {
+  display: block;
+  width: 100%;
+  background: transparent;
+  border: none;
+}
+
+.qa-waveform-thumb__canvas {
+  display: block;
+  width: 100%;
+}

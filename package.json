@@ -16,12 +16,21 @@
     "./theme.css": "./src/theme/theme.css",
     "./button.css": "./src/components/button.css",
     "./slider.css": "./src/components/slider.css",
+    "./knob.css": "./src/components/knob.css",
+    "./fader.css": "./src/components/fader.css",
+    "./meter.css": "./src/components/meter.css",
+    "./device.css": "./src/components/device.css",
+    "./waveform.css": "./src/components/waveform.css",
     "./label.css": "./src/components/label.css",
     "./layout.css": "./src/components/layout.css",
+    "./input.css": "./src/components/input.css",
     "./styles.css": "./src/styles.css"
   },
   "scripts": {
-    "typecheck": "vue-tsc --noEmit"
+    "typecheck": "vue-tsc --noEmit",
+    "dev:examples": "vite --config examples/vue/vite.config.ts",
+    "build:examples": "vite build --config examples/vue/vite.config.ts",
+    "screenshots": "npm run build:examples && node scripts/capture-screenshots.mjs"
   },
   "engines": {
     "node": ">=24.14.1"
@@ -30,7 +39,10 @@
     "vue": "^3.5.0"
   },
   "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.4",
+    "playwright": "^1.52.0",
     "typescript": "^5.9.3",
+    "vite": "^6.3.5",
     "vue": "^3.5.13",
     "vue-tsc": "^2.2.8"
   }

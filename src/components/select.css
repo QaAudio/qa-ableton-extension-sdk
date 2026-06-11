@@ -1,0 +1,47 @@
+.qa-select-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2em;
+}
+
+.qa-select-wrap__label {
+  color: var(--c-text-secondary);
+  font-size: 0.92em;
+}
+
+.qa-select-field {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  width: 100%;
+}
+
+.qa-select {
+  appearance: none;
+  width: 100%;
+  height: 20px;
+  padding: 0 1.5em 0 0.35em;
+  border: 1px solid var(--c-control-border);
+  background: var(--c-control-bg--500);
+  color: var(--c-text-primary);
+  font: inherit;
+  cursor: pointer;
+  outline: none;
+}
+
+.qa-select:focus {
+  outline: 2px solid var(--c-control-outline);
+  outline-offset: 0;
+}
+
+.qa-select:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.qa-select-field__chevron {
+  position: absolute;
+  right: 0.2em;
+  pointer-events: none;
+  color: var(--c-text-secondary);
+}

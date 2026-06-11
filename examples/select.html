@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" class="qa-root" data-qa-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Select — QA Extension SDK</title>
+    <link rel="stylesheet" href="../src/styles.css" />
+    <link rel="stylesheet" href="./shared/layout.css" />
+  </head>
+  <body class="demo-body">
+    <header class="demo-header">
+      <h1 class="demo-title">Select chooser</h1>
+      <nav class="demo-nav" aria-label="Examples">
+        <a href="./index.html">Overview</a>
+        <a href="./select.html" aria-current="page">Select</a>
+        <a href="./vue/">Vue layouts</a>
+      </nav>
+    </header>
+
+    <p>
+      Native <code>&lt;select class="qa-select"&gt;</code> styling. Interactive knobs, faders,
+      and meters are Vue components — see the <a href="./vue/">Vue gallery</a>.
+    </p>
+
+    <section class="demo-section demo-panel demo-stack">
+      <div class="qa-select-wrap">
+        <label class="qa-select-wrap__label" for="warp-mode">Warp mode</label>
+        <div class="qa-select-field">
+          <select id="warp-mode" class="qa-select">
+            <option value="beats">Beats</option>
+            <option value="tones" selected>Tones</option>
+            <option value="texture">Texture</option>
+            <option value="repitch">Re-pitch</option>
+          </select>
+          <svg
+            class="qa-icon qa-select-field__chevron"
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M4 6l4 4 4-4" />
+          </svg>
+        </div>
+      </div>
+
+      <div class="qa-select-wrap">
+        <label class="qa-select-wrap__label" for="filter-type">Filter type</label>
+        <div class="qa-select-field">
+          <select id="filter-type" class="qa-select">
+            <option value="lp12">LP12</option>
+            <option value="lp24">LP24</option>
+            <option value="bp">BP</option>
+            <option value="hp">HP</option>
+          </select>
+          <svg
+            class="qa-icon qa-select-field__chevron"
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M4 6l4 4 4-4" />
+          </svg>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>
