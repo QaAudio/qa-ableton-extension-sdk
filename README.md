@@ -32,7 +32,7 @@ Then open [http://127.0.0.1:5199](http://127.0.0.1:5199). Toggle layouts in the 
 
 ### Extension shell (dark / light)
 
-The full sandwich: project toolbar, session panel with pending-change badge, status bar with connection indicator. Pattern lifted from Intricator.
+The full sandwich: project toolbar, transport strip (play, tempo, master meter), tabbed session panel — particle browser with waveform thumbs and a selected-track editor, mini mixer with animated meters, macro page with accent knobs and XY pad — and a status bar that commits pending changes. Press play for fake playback: beat LED, moving playhead, pulsing meters. Pattern lifted from Intricator.
 
 | Dark | Light |
 |------|-------|

@@ -41,7 +41,8 @@ const layouts: { id: LayoutId; label: string; blurb: string }[] = [
   {
     id: "extension-shell",
     label: "Extension shell",
-    blurb: "Toolbar + session panel + status bar — the Intricator-shaped sandwich.",
+    blurb:
+      "Toolbar, transport, tabbed particles/mixer/macros panel, status bar — the Intricator-shaped sandwich.",
   },
   {
     id: "effect-panel",
