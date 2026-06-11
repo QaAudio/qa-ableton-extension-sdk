@@ -71,11 +71,11 @@ function clampedLevel(level: number): number {
         >
           <div class="qa-meter__gradient" />
           <div
-            class="qa-meter__fill"
+            class="qa-meter__shade"
             :style="
               orientation === 'vertical'
-                ? { transform: `scaleY(${clampedLevel(level)})`, height: '100%' }
-                : { transform: `scaleX(${clampedLevel(level)})`, width: '100%', height: '100%' }
+                ? { transform: `scaleY(${1 - clampedLevel(level)})` }
+                : { transform: `scaleX(${1 - clampedLevel(level)})` }
             "
           />
         </div>

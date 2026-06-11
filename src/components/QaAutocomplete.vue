@@ -18,6 +18,8 @@ const props = withDefaults(
     allowCreate?: boolean;
     showCreate?: boolean;
     createLabel?: string;
+    /** Focus the input on mount — for dialogs; avoid in always-visible toolbars. */
+    autofocus?: boolean;
   }>(),
   {
     placeholder: "",
@@ -26,6 +28,7 @@ const props = withDefaults(
     allowCreate: false,
     showCreate: false,
     createLabel: "Create new",
+    autofocus: false,
   },
 );
 
@@ -127,7 +130,9 @@ function onKeyDown(event: KeyboardEvent): void {
 }
 
 onMounted(() => {
-  void nextTick(() => inputRef.value?.focus());
+  if (props.autofocus) {
+    void nextTick(() => inputRef.value?.focus());
+  }
 });
 
 defineExpose({

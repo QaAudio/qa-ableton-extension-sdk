@@ -15,6 +15,7 @@
   border: 1px solid var(--c-control-border);
   color: var(--c-text-primary);
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
   cursor: ns-resize;
   touch-action: none;
   box-sizing: border-box;

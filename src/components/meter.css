@@ -64,23 +64,18 @@
   );
 }
 
-.qa-meter__fill {
+/* Covers the unlit part of the gradient from the top (or right) down to the
+   current level, leaving a faint ghost of the scale visible. */
+.qa-meter__shade {
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  transform-origin: bottom center;
-  background: color-mix(in oklch, var(--c-text-primary) 15%, transparent);
+  inset: 0;
+  transform-origin: top center;
+  background: color-mix(in srgb, var(--c-input-bg-500) 88%, transparent);
   pointer-events: none;
 }
 
-.qa-meter--horizontal .qa-meter__fill {
-  left: 0;
-  top: 0;
-  bottom: 0;
-  right: auto;
-  width: 100%;
-  transform-origin: left center;
+.qa-meter--horizontal .qa-meter__shade {
+  transform-origin: right center;
 }
 
 .qa-meter__clip {
