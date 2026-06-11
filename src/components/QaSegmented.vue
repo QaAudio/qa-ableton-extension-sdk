@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { computed } from "vue";
+import { accentClasses, type AccentProp } from "../lib/accent.js";
+
 export type SegmentedOption = { value: string; label: string };
 
 const props = withDefaults(
@@ -7,6 +10,7 @@ const props = withDefaults(
     options: SegmentedOption[];
     disabled?: boolean;
     ariaLabel?: string;
+    accent?: AccentProp;
   }>(),
   {
     ariaLabel: "Segmented control",
@@ -16,6 +20,8 @@ const props = withDefaults(
 const emit = defineEmits<{
   "update:modelValue": [value: string];
 }>();
+
+const accentClassList = computed(() => accentClasses(props.accent));
 
 function onKeydown(event: KeyboardEvent, index: number): void {
   if (props.disabled) return;
@@ -41,11 +47,14 @@ function onKeydown(event: KeyboardEvent, index: number): void {
       :key="option.value"
       type="button"
       class="qa-button qa-segmented__item"
-      :class="{
-        'qa-button--highlight': option.value === modelValue,
-        'qa-segmented__item--first': index === 0,
-        'qa-segmented__item--last': index === options.length - 1,
-      }"
+      :class="[
+        {
+          'qa-button--highlight': option.value === modelValue,
+          'qa-segmented__item--first': index === 0,
+          'qa-segmented__item--last': index === options.length - 1,
+        },
+        accentClassList,
+      ]"
       role="tab"
       :aria-selected="option.value === modelValue ? 'true' : 'false'"
       :data-active="option.value === modelValue ? 'true' : undefined"

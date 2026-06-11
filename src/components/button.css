@@ -21,10 +21,49 @@
   background-color: var(--c-control-bg--400);
 }
 
-.qa-button:active,
-.qa-button[aria-pressed="true"] {
+.qa-button:active:not(.qa-accent):not(.qa-accent-red):not(.qa-accent-blue):not(.qa-accent-green):not(.qa-accent-purple),
+.qa-button[aria-pressed="true"]:not(.qa-accent):not(.qa-accent-red):not(.qa-accent-blue):not(.qa-accent-green):not(.qa-accent-purple) {
   color: var(--c-control-on-foreground);
   background-color: var(--c-highlight--primary);
+}
+
+/* Surface accent — persistent colored background (CTA buttons). */
+.qa-button.qa-accent:not(.qa-toggle):not(.qa-segmented__item),
+.qa-button.qa-accent-red:not(.qa-toggle):not(.qa-segmented__item),
+.qa-button.qa-accent-blue:not(.qa-toggle):not(.qa-segmented__item),
+.qa-button.qa-accent-green:not(.qa-toggle):not(.qa-segmented__item),
+.qa-button.qa-accent-purple:not(.qa-toggle):not(.qa-segmented__item) {
+  background-color: var(--c-accent);
+  color: var(--c-text-on-accent);
+  border-color: transparent;
+}
+
+.qa-button.qa-accent:not(.qa-toggle):not(.qa-segmented__item):hover,
+.qa-button.qa-accent-red:not(.qa-toggle):not(.qa-segmented__item):hover,
+.qa-button.qa-accent-blue:not(.qa-toggle):not(.qa-segmented__item):hover,
+.qa-button.qa-accent-green:not(.qa-toggle):not(.qa-segmented__item):hover,
+.qa-button.qa-accent-purple:not(.qa-toggle):not(.qa-segmented__item):hover {
+  background-color: color-mix(in oklch, var(--c-accent) 88%, white);
+}
+
+.qa-button.qa-accent:not(.qa-toggle):not(.qa-segmented__item):active,
+.qa-button.qa-accent-red:not(.qa-toggle):not(.qa-segmented__item):active,
+.qa-button.qa-accent-blue:not(.qa-toggle):not(.qa-segmented__item):active,
+.qa-button.qa-accent-green:not(.qa-toggle):not(.qa-segmented__item):active,
+.qa-button.qa-accent-purple:not(.qa-toggle):not(.qa-segmented__item):active {
+  background-color: color-mix(in oklch, var(--c-accent) 88%, black);
+  color: var(--c-text-on-accent);
+}
+
+/* Toggle / segmented selected state with accent color. */
+.qa-button.qa-accent.qa-button--highlight[data-active="true"],
+.qa-button.qa-accent-red.qa-button--highlight[data-active="true"],
+.qa-button.qa-accent-blue.qa-button--highlight[data-active="true"],
+.qa-button.qa-accent-green.qa-button--highlight[data-active="true"],
+.qa-button.qa-accent-purple.qa-button--highlight[data-active="true"] {
+  background-color: var(--c-accent);
+  color: var(--c-text-on-accent);
+  border-color: transparent;
 }
 
 .qa-button:focus {

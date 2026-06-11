@@ -25,6 +25,7 @@ const layouts = [
   "sample-editor",
   "fx-chain",
   "synth-playground",
+  "accent-variations",
 ];
 
 const themes = ["dark", "light"];

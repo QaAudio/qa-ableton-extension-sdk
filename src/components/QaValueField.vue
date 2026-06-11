@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { computed, nextTick, ref } from "vue";
-import { clamp, formatValue, specFromProps } from "../lib/param.js";
+import {
+  formatValue,
+  sanitizeParamValue,
+  specFromProps,
+} from "../lib/param.js";
 import { useParamDrag } from "../composables/useParamDrag.js";
 import { useParamKeyboard } from "../composables/useParamKeyboard.js";
 
@@ -14,6 +18,8 @@ const props = withDefaults(
     unit?: string;
     format?: (value: number) => string;
     parse?: (text: string) => number | null;
+    /** When true, emit only finite integers (step defaults to 1). */
+    integer?: boolean;
     width?: string;
     label?: string;
     disabled?: boolean;
@@ -33,7 +39,7 @@ const spec = computed(() =>
   specFromProps({
     min: props.min,
     max: props.max,
-    step: props.step,
+    step: props.step ?? (props.integer ? 1 : undefined),
     defaultValue: props.defaultValue,
     unit: props.unit,
     format: props.format,
@@ -43,7 +49,12 @@ const spec = computed(() =>
 const readout = computed(() => formatValue(props.modelValue, spec.value));
 
 function setValue(value: number): void {
-  emit("update:modelValue", clamp(value, props.min, props.max));
+  const next = sanitizeParamValue(value, props.min, props.max, {
+    integer: props.integer,
+  });
+  if (next !== null) {
+    emit("update:modelValue", next);
+  }
 }
 
 const { dragging, onPointerdown } = useParamDrag({
@@ -76,7 +87,7 @@ function onBoxDblclick(event: MouseEvent): void {
 
 function commitEdit(): void {
   const parsed = props.parse?.(editText.value.trim()) ?? Number(editText.value);
-  if (!Number.isNaN(parsed)) {
+  if (parsed !== null) {
     setValue(parsed);
   }
   editing.value = false;

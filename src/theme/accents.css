@@ -1,0 +1,41 @@
+/*
+ * Per-component accent color overrides.
+ * Apply directly on a control root — does not cascade from ancestors.
+ */
+
+.qa-accent {
+  --c-accent: var(--c-highlight--primary);
+}
+
+.qa-accent-red {
+  --c-accent: var(--c-accent-red);
+}
+
+.qa-accent-blue {
+  --c-accent: var(--c-accent-blue);
+}
+
+.qa-accent-green {
+  --c-accent: var(--c-accent-green);
+}
+
+.qa-accent-purple {
+  --c-accent: var(--c-accent-purple);
+}
+
+/* Fill controls: sync derived tokens when accent class is present. */
+.qa-knob.qa-accent,
+.qa-knob.qa-accent-red,
+.qa-knob.qa-accent-blue,
+.qa-knob.qa-accent-green,
+.qa-knob.qa-accent-purple {
+  --c-knob-arc: var(--c-accent);
+}
+
+.qa-slider.qa-accent,
+.qa-slider.qa-accent-red,
+.qa-slider.qa-accent-blue,
+.qa-slider.qa-accent-green,
+.qa-slider.qa-accent-purple {
+  --c-slider-fill: var(--c-accent);
+}

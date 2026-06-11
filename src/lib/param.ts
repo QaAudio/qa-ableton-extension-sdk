@@ -19,6 +19,30 @@ export function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
 }
 
+export type SanitizeParamOptions = {
+  /** When true, round to the nearest integer after clamping. */
+  integer?: boolean;
+};
+
+/**
+ * Clamps a parameter value and rejects non-finite input.
+ *
+ * @example
+ * sanitizeParamValue(3.7, 0, 10, { integer: true }); // 4
+ * sanitizeParamValue(NaN, 0, 10); // null
+ */
+export function sanitizeParamValue(
+  value: number,
+  min: number,
+  max: number,
+  options?: SanitizeParamOptions,
+): number | null {
+  if (!Number.isFinite(value)) return null;
+  let v = clamp(value, min, max);
+  if (options?.integer) v = Math.round(v);
+  return v;
+}
+
 /**
  * Maps a value to a normalized position in [0, 1].
  *

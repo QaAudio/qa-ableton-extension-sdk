@@ -29,6 +29,7 @@ const trackName = ref(1);
         :min="1"
         :max="99"
         :default-value="1"
+        integer
         width="3em"
       />
     </div>

@@ -18,6 +18,10 @@
   --p-live-meter-high: hsl(55, 90%, 55%);
   --p-live-clip: hsl(0, 85%, 55%);
   --p-live-error: hsl(0, 72%, 58%);
+  --p-accent-red: hsl(0, 78%, 58%);
+  --p-accent-blue: hsl(210, 85%, 58%);
+  --p-accent-green: hsl(145, 55%, 48%);
+  --p-accent-purple: hsl(275, 65%, 62%);
 
   --c-bg--0500: oklch(from var(--p-live-ui-bg) l c h);
   --c-text-primary: oklch(from var(--p-live-text-primary) l c h);
@@ -29,9 +33,15 @@
   --c-control-on-foreground: oklch(from var(--p-live-control-text--enabled) l c h);
   --c-input-bg-500: oklch(from var(--p-live-input-bg) l c h);
   --c-highlight--primary: oklch(from var(--p-live-accent-primary) l c h);
+  --c-accent: var(--c-highlight--primary);
+  --c-accent-red: oklch(from var(--p-accent-red) l c h);
+  --c-accent-blue: oklch(from var(--p-accent-blue) l c h);
+  --c-accent-green: oklch(from var(--p-accent-green) l c h);
+  --c-accent-purple: oklch(from var(--p-accent-purple) l c h);
   --c-panel-bg: var(--c-input-bg-500);
   --c-error: oklch(from var(--p-live-error) l c h);
   --c-text-on-highlight: oklch(from var(--p-live-control-text--enabled) l c h);
+  --c-text-on-accent: var(--c-text-on-highlight);
   --c-meter-low: oklch(from var(--p-live-meter-low) l c h);
   --c-meter-high: oklch(from var(--p-live-meter-high) l c h);
   --c-clip: oklch(from var(--p-live-clip) l c h);
@@ -58,6 +68,10 @@
   --p-live-meter-high: hsl(55, 85%, 45%);
   --p-live-clip: hsl(0, 80%, 48%);
   --p-live-error: hsl(0, 68%, 48%);
+  --p-accent-red: hsl(0, 72%, 48%);
+  --p-accent-blue: hsl(210, 80%, 45%);
+  --p-accent-green: hsl(145, 50%, 38%);
+  --p-accent-purple: hsl(275, 60%, 50%);
 
   --c-bg--0500: oklch(from var(--p-live-ui-bg) l c h);
   --c-text-primary: oklch(from var(--p-live-text-primary) l c h);
@@ -69,9 +83,15 @@
   --c-control-on-foreground: oklch(from var(--p-live-control-text--enabled) l c h);
   --c-input-bg-500: oklch(from var(--p-live-input-bg) l c h);
   --c-highlight--primary: oklch(from var(--p-live-accent-primary) l c h);
+  --c-accent: var(--c-highlight--primary);
+  --c-accent-red: oklch(from var(--p-accent-red) l c h);
+  --c-accent-blue: oklch(from var(--p-accent-blue) l c h);
+  --c-accent-green: oklch(from var(--p-accent-green) l c h);
+  --c-accent-purple: oklch(from var(--p-accent-purple) l c h);
   --c-panel-bg: var(--c-input-bg-500);
   --c-error: oklch(from var(--p-live-error) l c h);
   --c-text-on-highlight: oklch(from var(--p-live-control-text--enabled) l c h);
+  --c-text-on-accent: var(--c-text-on-highlight);
   --c-meter-low: oklch(from var(--p-live-meter-low) l c h);
   --c-meter-high: oklch(from var(--p-live-meter-high) l c h);
   --c-clip: oklch(from var(--p-live-clip) l c h);

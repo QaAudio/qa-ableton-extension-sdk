@@ -1,12 +1,15 @@
 <script setup lang="ts">
+import { computed } from "vue";
+import { accentClasses, type AccentProp } from "../lib/accent.js";
 import IconPower from "./icons/IconPower.vue";
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     modelValue: boolean;
     size?: number;
     disabled?: boolean;
     ariaLabel?: string;
+    accent?: AccentProp;
   }>(),
   {
     size: 16,
@@ -17,13 +20,15 @@ withDefaults(
 defineEmits<{
   "update:modelValue": [value: boolean];
 }>();
+
+const accentClassList = computed(() => accentClasses(props.accent));
 </script>
 
 <template>
   <button
     type="button"
     class="qa-power-button"
-    :class="{ 'qa-power-button--on': modelValue }"
+    :class="[{ 'qa-power-button--on': modelValue }, accentClassList]"
     :disabled="disabled"
     :aria-pressed="modelValue ? 'true' : 'false'"
     :aria-label="ariaLabel"
@@ -53,7 +58,7 @@ defineEmits<{
 }
 
 .qa-power-button--on {
-  color: var(--c-highlight--primary);
+  color: var(--c-accent);
 }
 
 .qa-power-button:focus-visible {

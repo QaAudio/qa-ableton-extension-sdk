@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onUnmounted } from "vue";
 import { clamp } from "../lib/param.js";
+import { accentClasses, type AccentColor } from "../lib/accent.js";
 
 export type XYValue = { x: number; y: number };
 
@@ -11,6 +12,7 @@ const props = withDefaults(
     labelY?: string;
     defaultValue?: XYValue;
     disabled?: boolean;
+    accent?: AccentColor;
   }>(),
   {
     labelX: "X",
@@ -26,6 +28,8 @@ const handleStyle = computed(() => ({
   left: `${props.modelValue.x * 100}%`,
   top: `${(1 - props.modelValue.y) * 100}%`,
 }));
+
+const accentClassList = computed(() => accentClasses(props.accent));
 
 function setFromClient(clientX: number, clientY: number, rect: DOMRect): void {
   const x = clamp((clientX - rect.left) / rect.width, 0, 1);
@@ -109,7 +113,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="qa-xy-pad">
+  <div class="qa-xy-pad" :class="accentClassList">
     <div v-if="labelX || labelY" class="qa-xy-pad__labels">
       <span>{{ labelX }}</span>
       <span>{{ labelY }}</span>

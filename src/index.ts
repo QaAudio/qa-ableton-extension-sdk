@@ -6,6 +6,11 @@ export {
   setInputInvalid,
 } from "./dialog/dialog-utils.js";
 export {
+  accentClasses,
+  type AccentColor,
+  type AccentProp,
+} from "./lib/accent.js";
+export {
   THEME_ATTRIBUTE,
   type ThemeProvider,
   type ThemeProviderOptions,
@@ -22,9 +27,11 @@ export {
   formatPercent,
   formatValue,
   normalize,
+  sanitizeParamValue,
   specFromProps,
   stepFor,
   type ParamSpec,
+  type SanitizeParamOptions,
 } from "./lib/param.js";
 export {
   decodeWavPeaks,

@@ -30,7 +30,7 @@ npm run screenshots     # rebuild gallery + capture docs/screenshots/
 
 - Ship **source** via `package.json` `exports` — consumers bundle with esbuild/Vite.
 - No `@ableton-extensions/sdk` in this package.
-- Component CSS colocated (`button.css`, `knob.css`, …); shared tokens in `src/theme/tokens.css`.
+- Component CSS colocated (`button.css`, `knob.css`, …); shared tokens in `src/theme/tokens.css`; accent palette + classes in `src/theme/accents.css`.
 - `peerDependencies.vue` ^3.5 — do not bundle Vue into this lib.
 - Music controls use `useParamDrag` + `useParamKeyboard` + `src/lib/param.ts` helpers.
 - Waveform rendering is canvas-based via `src/audio/waveform-draw.ts`.

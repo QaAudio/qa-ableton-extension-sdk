@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { formatPercent, formatValue, specFromProps } from "../lib/param.js";
+import { accentClasses, type AccentColor } from "../lib/accent.js";
+import { useParamDrag } from "../composables/useParamDrag.js";
+import { useParamKeyboard } from "../composables/useParamKeyboard.js";
 
 const props = withDefaults(
   defineProps<{
@@ -14,6 +17,7 @@ const props = withDefaults(
     showValue?: boolean;
     defaultValue?: number;
     disabled?: boolean;
+    accent?: AccentColor;
   }>(),
   {
     min: 0,
@@ -52,33 +56,55 @@ const readout = computed(() => {
   return formatValue(props.modelValue, spec.value);
 });
 
-function onInput(event: Event): void {
-  emit("update:modelValue", Number((event.target as HTMLInputElement).value));
+const accentClassList = computed(() => accentClasses(props.accent));
+
+function setValue(value: number): void {
+  emit("update:modelValue", value);
 }
 
-function onDblclick(): void {
-  if (props.defaultValue === undefined) return;
-  emit("update:modelValue", props.defaultValue);
-}
+const { dragging, onPointerdown, onDblclick } = useParamDrag({
+  value: () => props.modelValue,
+  spec: spec.value,
+  onChange: setValue,
+  disabled: () => props.disabled ?? false,
+});
+
+const { onKeydown } = useParamKeyboard({
+  value: () => props.modelValue,
+  spec: spec.value,
+  onChange: setValue,
+  disabled: () => props.disabled ?? false,
+  orientation: "vertical",
+});
 </script>
 
 <template>
   <div class="qa-slider-row">
     <span v-if="label" class="qa-label__text">{{ label }}</span>
     <span v-else />
-    <input
+    <div
       class="qa-slider"
-      type="range"
-      :min="min"
-      :max="max"
-      :step="step"
-      :value="modelValue"
-      :disabled="disabled"
+      :class="[
+        accentClassList,
+        {
+          'qa-slider--dragging': dragging,
+          'qa-slider--disabled': disabled,
+        },
+      ]"
+      role="slider"
+      tabindex="0"
+      :aria-valuemin="min"
+      :aria-valuemax="max"
+      :aria-valuenow="modelValue"
+      :aria-valuetext="readout"
+      :aria-orientation="'vertical'"
+      :aria-label="label ?? 'Parameter'"
       :style="{ '--qa-slider-fill': fill }"
-      @input="onInput"
+      @pointerdown="onPointerdown"
       @dblclick="onDblclick"
-    />
-    <span v-if="showValue" class="qa-slider-row__value">{{ readout }}</span>
-    <span v-else />
+      @keydown="onKeydown"
+    >
+      <span v-if="showValue" class="qa-slider__value">{{ readout }}</span>
+    </div>
   </div>
 </template>

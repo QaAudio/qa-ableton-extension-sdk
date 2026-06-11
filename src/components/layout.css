@@ -198,3 +198,13 @@ html.qa-root body {
   color: var(--c-text-on-highlight, #081018);
   border-color: transparent;
 }
+
+.qa-badge.qa-accent,
+.qa-badge.qa-accent-red,
+.qa-badge.qa-accent-blue,
+.qa-badge.qa-accent-green,
+.qa-badge.qa-accent-purple {
+  background-color: var(--c-accent);
+  color: var(--c-text-on-accent);
+  border-color: transparent;
+}

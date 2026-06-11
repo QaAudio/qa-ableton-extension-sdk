@@ -173,7 +173,7 @@ Requires **Node ≥ 24** for typechecking.
 | `QaSlider` | Horizontal device parameter slider |
 | `QaKnob` | Rotary macro knob (drag + keyboard) |
 | `QaFader` | Vertical mixer fader |
-| `QaValueField` | Draggable/editable number box |
+| `QaValueField` | Draggable/editable number box (`integer` for whole numbers) |
 | `QaXYPad` | 2D XY control pad |
 | `QaSelect` | Native chooser dropdown |
 
@@ -216,6 +216,19 @@ const cutoff = ref(1200);
     :format="formatHz"
   />
 </template>
+```
+
+**Integer value field (track number, voice count):**
+
+```vue
+<QaValueField
+  v-model="voices"
+  label="Voices"
+  :min="1"
+  :max="16"
+  :default-value="8"
+  integer
+/>
 ```
 
 **Waveform with fake peaks (demo/screenshot):**
@@ -266,10 +279,12 @@ Framework-free helpers exported from the main entry:
 | `fakePeaks(seed, buckets)` | Deterministic demo peaks |
 | `normalize` / `denormalize` | Linear/log parameter mapping |
 | `formatDb` / `formatHz` / `formatPercent` | Display formatters |
+| `accentClasses` | Map `accent` prop → `qa-accent` / `qa-accent-{color}` CSS classes |
 
 ```ts
-import { decodeWavPeaks, fakePeaks } from "@quantumaudio/ableton-extension-sdk";
+import { accentClasses, decodeWavPeaks, fakePeaks } from "@quantumaudio/ableton-extension-sdk";
 
+accentClasses("red"); // ["qa-accent-red"]
 const fromWav = decodeWavPeaks(wavBytes, 200);
 const demo = fakePeaks("kick-01", 120);
 ```
@@ -287,6 +302,33 @@ import "@quantumaudio/ableton-extension-sdk/styles.css";
 
 createThemeProvider(document.documentElement, { defaultTheme: "dark" });
 ```
+
+### Accent variations
+
+Per-component accent colors tint fill controls (slider track, knob arc, fader, XY pad handle) or give buttons/badges a **persistent colored surface**. Toggle and segmented controls tint the **selected/on** state only.
+
+| Class / prop | Effect |
+|---|---|
+| `qa-accent` / `accent` | Default Live orange |
+| `qa-accent-red` / `accent="red"` | Red |
+| `qa-accent-blue` / `accent="blue"` | Blue |
+| `qa-accent-green` / `accent="green"` | Green |
+| `qa-accent-purple` / `accent="purple"` | Purple |
+
+Apply classes **directly on each control** — accent does not cascade from a parent container.
+
+```vue
+<QaButton accent>Save</QaButton>
+<QaButton accent="red">Delete</QaButton>
+<QaSlider v-model="mix" label="Mix" accent="blue" />
+```
+
+```html
+<button class="qa-button qa-accent-red">Delete</button>
+<input class="qa-slider qa-accent-green" type="range" />
+```
+
+`highlight` (toolbar toggle pattern) and `accent` (chromatic CTA / custom fill hue) are separate — use `highlight` + `active` for neutral-until-active toolbar buttons.
 
 **2. Vue panel** — steal a layout from the gallery or compose your own:
 

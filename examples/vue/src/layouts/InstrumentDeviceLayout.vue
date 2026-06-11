@@ -87,6 +87,7 @@ const filterType = ref("lp12");
         :min="1"
         :max="16"
         :default-value="8"
+        integer
       />
     </QaDevicePanel>
   </main>

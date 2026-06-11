@@ -62,7 +62,7 @@
   height: 10px;
   margin: -5px 0 0 -5px;
   border-radius: 50%;
-  background: var(--c-highlight--primary);
+  background: var(--c-accent);
   border: 1px solid var(--c-control-border);
   pointer-events: none;
 }

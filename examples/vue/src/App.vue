@@ -11,6 +11,7 @@ import RenameDialogLayout from "./layouts/RenameDialogLayout.vue";
 import SampleEditorLayout from "./layouts/SampleEditorLayout.vue";
 import StatusChromeLayout from "./layouts/StatusChromeLayout.vue";
 import SynthPlaygroundLayout from "./layouts/SynthPlaygroundLayout.vue";
+import AccentVariationsLayout from "./layouts/AccentVariationsLayout.vue";
 
 const props = withDefaults(
   defineProps<{
@@ -33,7 +34,8 @@ type LayoutId =
   | "channel-strip"
   | "sample-editor"
   | "fx-chain"
-  | "synth-playground";
+  | "synth-playground"
+  | "accent-variations";
 
 const layouts: { id: LayoutId; label: string; blurb: string }[] = [
   {
@@ -86,6 +88,11 @@ const layouts: { id: LayoutId; label: string; blurb: string }[] = [
     label: "Synth playground",
     blurb: "Web Audio demo — power on to hear a live synth + meter.",
   },
+  {
+    id: "accent-variations",
+    label: "Accent variations",
+    blurb: "Fill vs surface accent colors — orange, red, blue, green, purple.",
+  },
 ];
 
 const activeLayout = ref<LayoutId>(
@@ -118,6 +125,8 @@ const layoutComponent = computed(() => {
       return FxChainLayout;
     case "synth-playground":
       return SynthPlaygroundLayout;
+    case "accent-variations":
+      return AccentVariationsLayout;
     default:
       return ExtensionShellLayout;
   }

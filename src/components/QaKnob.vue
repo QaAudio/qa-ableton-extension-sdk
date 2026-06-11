@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { formatValue, normalize, specFromProps } from "../lib/param.js";
+import { accentClasses, type AccentColor } from "../lib/accent.js";
 import { useParamDrag } from "../composables/useParamDrag.js";
 import { useParamKeyboard } from "../composables/useParamKeyboard.js";
 
@@ -19,6 +20,7 @@ const props = withDefaults(
     taper?: "linear" | "log";
     step?: number;
     disabled?: boolean;
+    accent?: AccentColor;
   }>(),
   {
     min: 0,
@@ -118,10 +120,12 @@ const { onKeydown } = useParamKeyboard({
   disabled: () => props.disabled ?? false,
   orientation: "vertical",
 });
+
+const accentClassList = computed(() => accentClasses(props.accent));
 </script>
 
 <template>
-  <div class="qa-knob" :class="`qa-knob--${size}`">
+  <div class="qa-knob" :class="[`qa-knob--${size}`, accentClassList]">
     <span v-if="label" class="qa-knob__label">{{ label }}</span>
     <div
       class="qa-knob__dial"
@@ -138,7 +142,7 @@ const { onKeydown } = useParamKeyboard({
       @dblclick="onDblclick"
       @keydown="onKeydown"
     >
-      <svg class="qa-knob__svg" viewBox="0 0 40 40" aria-hidden="true">
+      <svg class="qa-knob__svg" viewBox="0 0 40 30" aria-hidden="true">
         <path class="qa-knob__track" :d="trackPath" />
         <path v-if="valueArcPath" class="qa-knob__arc" :d="valueArcPath" />
         <line
