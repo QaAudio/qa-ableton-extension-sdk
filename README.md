@@ -1,8 +1,8 @@
 # @quantumaudio/ableton-extension-sdk
 
-**Look like you belong in Live.** HTML, CSS, and Vue primitives that mirror Ableton’s extension webview styling — dark *and* light, device knobs and faders, waveforms, dialogs that feel native.
+HTML, CSS, and Vue primitives that mirror Ableton’s Live styling — dark *and* light, device knobs and faders, waveforms, dialogs that feel native.
 
-No `@ableton-extensions/sdk` here. This is the paint and paneling; your extension brings the engine.
+No `@ableton-extensions/sdk` here. This is the paint and paneling; your extension brings the engine; this is a personal initiative, not Ableton one;
 
 License: [Apache-2.0](LICENSE). Ships **TypeScript/Vue source** (consumers bundle with esbuild or Vite).
 
