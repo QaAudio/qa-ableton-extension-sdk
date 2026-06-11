@@ -5,8 +5,10 @@ import { defineConfig } from "vite";
 
 const examplesRoot = path.dirname(fileURLToPath(import.meta.url));
 const packageRoot = path.resolve(examplesRoot, "../..");
+const pagesBase = "/qa-ableton-extension-sdk/";
 
 export default defineConfig({
+  base: process.env.GITHUB_PAGES === "1" ? pagesBase : "/",
   root: examplesRoot,
   build: {
     outDir: path.resolve(examplesRoot, "dist"),

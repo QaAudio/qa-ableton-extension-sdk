@@ -1,0 +1,42 @@
+name: Deploy Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea3d8b0ff00ca8d87722 # v4.2.2
+      - uses: actions/setup-node@39370e3970a6d050bcc030a828d9f4eb2664ce1c # v4.1.0
+        with:
+          node-version: "24"
+          cache: npm
+      - run: npm ci
+      - run: npm run build:examples
+        env:
+          GITHUB_PAGES: "1"
+      - uses: actions/upload-pages-artifact@56afc44e2fe1294308f8cd79a667e8f863ef65c8 # v3.0.1
+        with:
+          path: examples/vue/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/deploy-pages@d6db90164ac5ed86f2b4aed7e906f562ef983001 # v4.0.5
+        id: deployment

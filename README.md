@@ -20,7 +20,9 @@ Building an Ableton extension should not mean reinventing pill buttons, modal ch
 
 ## Gallery
 
-Run the interactive gallery locally:
+**[Live demo](https://qaaudio.github.io/qa-ableton-extension-sdk/)** — interactive Vue layout gallery (dark/light, knobs, waveforms, synth playground). Deployed from `main` via GitHub Pages.
+
+Run the gallery locally:
 
 ```bash
 npm run dev:examples
