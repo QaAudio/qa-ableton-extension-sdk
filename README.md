@@ -10,7 +10,7 @@ License: [Apache-2.0](LICENSE). Ships **TypeScript/Vue source** (consumers bundl
 
 ## Why this exists
 
-Building an Ableton extension should not mean reinventing pill buttons, modal chrome, rotary knobs, and “why does my webview look like a 2009 blog.” QuantumAudio extensions ([Intricator](https://github.com/QaAudio), MCP kernel, QuantumAgent) all share this kit so:
+Building an Ableton extension should not mean reinventing pill buttons, modal chrome, rotary knobs, and “why does my webview look like a 2009 blog.”
 
 - **Themes track Live** — flip `data-qa-theme` between dark and light tokens.
 - **Layouts match real extensions** — toolbar → panel → status bar, plus synth/device/mixer UIs.
