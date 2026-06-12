@@ -1,0 +1,62 @@
+<!--
+  Panel markup only — no <html> shell.
+  panel-document.ts wraps this with theme CSS and the script below.
+  Placeholders {{INITIAL_TEMPO}} are replaced at runtime when the dialog opens.
+-->
+<main class="panel">
+  <header class="panel__header">
+    <h1 class="panel__title">Tempo Tap</h1>
+    <p class="qa-label__hint">
+      Tap on the beat, tweak the number, then apply to your Live set.
+    </p>
+  </header>
+
+  <section class="panel__section" aria-labelledby="tempo-heading">
+    <h2 id="tempo-heading" class="panel__label">Project tempo</h2>
+    <p class="panel__readout">
+      <span class="panel__bpm" id="bpm-display">{{INITIAL_TEMPO}}</span>
+      <span class="panel__unit">BPM</span>
+    </p>
+  </section>
+
+  <section class="panel__section">
+    <div class="qa-button-group">
+      <button type="button" class="qa-button qa-accent" id="tap-button">Tap</button>
+      <button type="button" class="qa-button" id="reset-taps">Reset taps</button>
+    </div>
+    <p class="qa-label__hint" id="tap-hint">Tap at least twice on the beat.</p>
+  </section>
+
+  <section class="panel__section">
+    <label class="qa-label" for="tempo-slider">
+      <span class="qa-label__text">Fine tune</span>
+      <div class="qa-slider-row">
+        <input
+          class="qa-slider qa-accent"
+          type="range"
+          id="tempo-slider"
+          min="20"
+          max="999"
+          step="1"
+          value="{{INITIAL_TEMPO}}"
+        />
+        <span class="qa-slider-row__value" id="tempo-slider-value">{{INITIAL_TEMPO}}</span>
+      </div>
+    </label>
+  </section>
+
+  <section class="panel__section panel__theme">
+    <span class="qa-label__text">Theme</span>
+    <div class="qa-button-group">
+      <button type="button" class="qa-button" id="theme-dark" aria-pressed="true">Dark</button>
+      <button type="button" class="qa-button" id="theme-light" aria-pressed="false">Light</button>
+    </div>
+  </section>
+
+  <footer class="panel__footer">
+    <div class="qa-button-group qa-button-group--end">
+      <button type="button" class="qa-button" id="cancel-button">Cancel</button>
+      <button type="button" class="qa-button qa-accent" id="apply-button">Apply</button>
+    </div>
+  </footer>
+</main>

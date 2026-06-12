@@ -8,6 +8,20 @@ License: [Apache-2.0](LICENSE). Ships **TypeScript/Vue source** (consumers bundl
 
 ---
 
+## New here?
+
+**Start with the [Quick Start guide](docs/quick-start.md)** — build a real Live extension with plain HTML (no Vue). Includes a full sample project: [`examples/starter-extension/`](examples/starter-extension/).
+
+| Resource | Link |
+|----------|------|
+| Quick Start (repo) | [docs/quick-start.md](docs/quick-start.md) |
+| Quick Start (wiki) | [GitHub Wiki](https://github.com/QaAudio/qa-ableton-extension-sdk/wiki/Quick-Start) |
+| Starter extension | [examples/starter-extension/](examples/starter-extension/) |
+| Static HTML demos | [examples/](examples/) |
+| Vue layout gallery | `npm run dev:examples` → [http://127.0.0.1:5199](http://127.0.0.1:5199) |
+
+---
+
 ## Why this exists
 
 Building an Ableton extension should not mean reinventing pill buttons, modal chrome, rotary knobs, and “why does my webview look like a 2009 blog.”
@@ -291,7 +305,9 @@ const demo = fakePeaks("kick-01", 120);
 
 ---
 
-## Quick start
+## Quick start (UI only)
+
+For a **full Ableton extension** (manifest, build, Live API), use [docs/quick-start.md](docs/quick-start.md) and [examples/starter-extension/](examples/starter-extension/).
 
 **1. Theme + styles** (extension webview or Vite app):
 

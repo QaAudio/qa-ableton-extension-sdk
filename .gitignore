@@ -1,5 +1,10 @@
 node_modules/
 dist/
 examples/vue/dist/
+examples/starter-extension/dist/
+examples/starter-extension/node_modules/
+examples/starter-extension/package-lock.json
+examples/starter-extension/.env
+vendor/*.tgz
 .env
 .DS_Store

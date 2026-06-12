@@ -13,7 +13,9 @@ qa-ableton-extension-sdk/
 │   ├── lib/            # param.ts (normalize, formatters)
 │   ├── audio/          # peaks.ts, waveform-draw.ts
 │   └── index.ts
-├── examples/           # static HTML demos + examples/vue/ Vite gallery
+├── examples/           # static HTML demos, examples/vue/ gallery, starter-extension/
+├── docs/quick-start.md # beginner extension tutorial (plain HTML path)
+├── docs/wiki/          # GitHub wiki source (sync via docs/wiki/README.md)
 ├── docs/screenshots/   # README captures (npm run screenshots)
 └── package.json        # exports point at src/ (no dist)
 ```
