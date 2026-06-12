@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { formatValue, normalize, specFromProps } from "../lib/param.js";
+import { formatValue, normalize, snapParamValue, specFromProps } from "../lib/param.js";
 import { accentClasses, type AccentColor } from "../lib/accent.js";
 import { useParamDrag } from "../composables/useParamDrag.js";
 import { useParamKeyboard } from "../composables/useParamKeyboard.js";
@@ -103,7 +103,7 @@ const valueArcPath = computed(() => {
 const needleEnd = computed(() => polarXY(needleAngle.value, NEEDLE_R));
 
 function setValue(value: number): void {
-  emit("update:modelValue", value);
+  emit("update:modelValue", snapParamValue(value, spec.value));
 }
 
 const { dragging, onPointerdown, onDblclick } = useParamDrag({

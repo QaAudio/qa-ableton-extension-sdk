@@ -28,6 +28,7 @@ export {
   formatValue,
   normalize,
   sanitizeParamValue,
+  snapParamValue,
   specFromProps,
   stepFor,
   type ParamSpec,

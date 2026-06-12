@@ -85,6 +85,19 @@ export function stepFor(spec: ParamSpec): number {
 }
 
 /**
+ * Snaps a value to the parameter step grid and clamps to `[min, max]`.
+ *
+ * @example
+ * snapParamValue(0.537, { min: 0, max: 1, step: 0.1 }); // 0.5
+ */
+export function snapParamValue(value: number, spec: ParamSpec): number {
+  const step = stepFor(spec);
+  let snapped = Math.round(value / step) * step;
+  snapped = clamp(snapped, spec.min, spec.max);
+  return parseFloat(snapped.toFixed(4));
+}
+
+/**
  * Formats a parameter value for display.
  *
  * Uses `spec.format` when provided; otherwise trims to two decimals and appends `spec.unit`.
