@@ -2,18 +2,21 @@
 
 A **complete, commented** Ableton Live extension for beginners. It opens a Live-styled panel (plain HTML — **no Vue**) where you tap in a tempo and apply it to the project.
 
-Full walkthrough: [`docs/quick-start.md`](../../docs/quick-start.md).
+**Use this folder as your template** — copy it to start a new extension instead of scaffolding from scratch.
+
+| Guide | Content |
+|-------|---------|
+| [Quick start](../../docs/quick-start.md) | Install SDK, run in Live, package `.ablx` |
+| [Plain HTML webviews](../../docs/plain-html-webview.md) | `interface.html` vs `ui/`, TypeScript ↔ webview, DOM wiring |
 
 ## Quick run
 
-1. Install [Ableton Extensions SDK](https://ableton.github.io/extensions-sdk/) tarballs — see [`vendor/README.md`](../../vendor/README.md).
+1. Copy Ableton's SDK `.tgz` files into [`vendor/`](../../vendor/) — see [`vendor/README.md`](../../vendor/README.md).
 2. Copy `.env.example` → `.env` and set `EXTENSION_HOST_PATH`.
 3. From this folder:
 
 ```bash
 npm install
-npm install /path/to/ableton-extensions-sdk-*.tgz
-npm install -D /path/to/ableton-extensions-cli-*.tgz
 npm start
 ```
 
@@ -34,9 +37,11 @@ npm start
 | File | Why |
 |------|-----|
 | `src/extension.ts` | Entry point — `activate`, command, Live API |
-| `src/panel-document.ts` | How to inline SDK CSS and build a data-URL webview |
-| `ui/panel-body.html` | Your UI markup |
+| `src/panel-document.ts` | Builds the full HTML document (like Ableton's `interface.html`) + inlined SDK CSS |
+| `ui/panel-body.html` | Your UI markup fragment — edit this for layout and SDK classes |
 | `build.ts` | esbuild bundles one file for Live |
+
+This project uses **`ui/panel-body.html`** instead of a single `src/interface.html` so markup stays easy to edit. Both patterns are documented in [plain-html-webview.md](../../docs/plain-html-webview.md).
 
 ## Customize
 

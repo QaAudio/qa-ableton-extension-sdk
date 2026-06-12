@@ -1,14 +1,16 @@
 # Quick start — build your first Live extension (no Vue required)
 
-This guide is for **music producers and beginners** who want a panel inside Ableton Live that looks native — without learning Vue or a heavy front-end framework.
+This guide is for **music producers and beginners** who want a panel inside Ableton Live that looks native — **without learning Vue** or a heavy front-end framework.
 
 You will:
 
 1. Install the official [Ableton Extensions SDK](https://ableton.github.io/extensions-sdk/) and this UI kit.
-2. Run the **starter extension** in `examples/starter-extension/` — a small **Tempo Tap** utility.
+2. Run the **starter extension** in `examples/starter-extension/` — a small **Tempo Tap** utility you can copy as your project template.
 3. Style the panel with plain HTML and CSS from `@quantumaudio/ableton-extension-sdk`.
 
 > **Vue is optional.** Knobs, faders, meters, and waveforms are Vue components. Buttons, sliders, labels, dialogs, and themes work with **plain HTML** — see the static demos in [`examples/`](../examples/).
+>
+> **Deep dive (interface.html, `ui/` folder, TypeScript ↔ webview):** [plain-html-webview.md](./plain-html-webview.md)
 
 ---
 
@@ -18,7 +20,7 @@ You will:
 |-------|------|
 | **Ableton Extensions SDK** | Talks to Live (tempo, tracks, clips, commands). |
 | **This package** | Makes your webview look like Live (dark/light theme, sliders, buttons). |
-| **`examples/starter-extension/`** | A complete extension project you can copy. |
+| **`examples/starter-extension/`** | A complete extension project — use it as your **starter template** (manifest, build, HTML panel, dev-run). |
 
 The starter extension registers a command, opens a styled modal panel, lets you **tap in a tempo**, and applies it to the current Live set.
 
@@ -42,11 +44,27 @@ cd qa-ableton-extension-sdk
 npm install
 ```
 
+**Starting your own extension?** Copy the starter folder instead of wiring files from scratch:
+
+```bash
+cp -r examples/starter-extension ../my-extension
+cd ../my-extension
+```
+
+Then follow steps 2–4 below inside your copy. See [plain-html-webview.md](./plain-html-webview.md) for the full scaffold checklist.
+
 ---
 
 ## 2. Install Ableton's Extensions SDK
 
-From the folder where you extracted Ableton's SDK download:
+Copy Ableton's `.tgz` files into [`vendor/`](../vendor/) at the repo root (see [`vendor/README.md`](../vendor/README.md)), then install the starter example:
+
+```bash
+cd examples/starter-extension
+npm install
+```
+
+Or install the tarballs directly from wherever you downloaded them:
 
 ```bash
 cd examples/starter-extension
@@ -55,14 +73,13 @@ npm install -D /path/to/ableton-extensions-cli-1.0.0-beta.0.tgz
 npm install
 ```
 
-```bash
-npm install ../../../../vendor/extensions-sdk-1.0.0-beta.0/ableton-extensions-sdk-1.0.0-beta.0.tgz
-npm install -D ../../../../vendor/extensions-sdk-1.0.0-beta.0/ableton-extensions-cli-1.0.0-beta.0.tgz
-```
+The last `npm install` links `@quantumaudio/ableton-extension-sdk` from the repo root (`file:../..`).
 
 ---
 
 ## 3. Point at Live's Extension Host
+
+Copy `.env.example` → `.env` in the starter folder, then set:
 
 ```env
 EXTENSION_HOST_PATH=C:\Program Files\Ableton\Live 12 Beta\Resources\Extensions\Extension Host.js
@@ -92,7 +109,11 @@ In Live, run the extension command **`quantumaudio.starter.open-tempo-panel`** (
 
 ---
 
-## 5. How the pieces fit together
+## 5. Project layout — `interface.html` and the `ui/` folder
+
+Live loads **one bundled file** — no `node_modules` at runtime. Your panel HTML is inlined at build time and opened as a **data URL** (`data:text/html,...`).
+
+Ableton's SDK examples use a single file named **`interface.html`**. The starter extension uses a **`ui/`** folder for easier editing — both patterns are equivalent.
 
 ```
 examples/starter-extension/
@@ -100,29 +121,36 @@ examples/starter-extension/
 ├── build.ts               ← esbuild bundles everything into one .js file
 ├── src/
 │   ├── extension.ts       ← activate() — register command, open panel, set tempo
-│   ├── panel-document.ts  ← builds HTML + inlined SDK CSS
-│   └── html.d.ts          ← TypeScript types for .html imports
+│   ├── panel-document.ts  ← builds full HTML doc + inlined SDK CSS (like interface.html)
+│   └── html.d.ts          ← TypeScript types for .html / .css imports
 └── ui/
-    └── panel-body.html    ← your UI markup (plain HTML)
+    └── panel-body.html    ← your markup fragment (plain HTML, SDK classes)
 ```
 
-Live loads **one bundled file** — no `node_modules` at runtime. The build inlines:
+| Approach | When to use |
+|----------|-------------|
+| **`src/interface.html`** | One self-contained file (matches [Ableton modal-dialog](https://ableton.github.io/extensions-sdk/)). |
+| **`ui/*.html` + `panel-document.ts`** | Separate markup from TypeScript; inject `{{PLACEHOLDERS}}` and SDK CSS in the builder. |
+
+The build inlines:
 
 - Your TypeScript (`src/extension.ts`)
-- Panel HTML (`ui/panel-body.html`)
+- Panel HTML (`ui/panel-body.html` or `interface.html`)
 - SDK styles (`theme.css` + `styles.css`) as text inside the webview
+
+Full explanation, diagrams, and a from-scratch checklist: **[plain-html-webview.md](./plain-html-webview.md)**.
 
 ---
 
 ## 6. Styling without Vue
 
-**Step A — load theme tokens** (in your HTML document):
+**Step A — load theme tokens** (on the root `<html>`):
 
 ```html
 <html lang="en" class="qa-root" data-qa-theme="dark">
 ```
 
-**Step B — use SDK CSS classes** (same as Live):
+**Step B — use SDK CSS classes** on native elements (not Vue components):
 
 ```html
 <div class="qa-slider-row">
@@ -133,40 +161,78 @@ Live loads **one bundled file** — no `node_modules` at runtime. The build inli
 <button type="button" class="qa-button">Apply</button>
 ```
 
-**Step C — optional JS helpers** from the main package (not `/vue`):
+**Step C — inline CSS in the data URL** (required in Live — no `<link href="node_modules/...">`):
 
-```js
-import { createThemeProvider } from "@quantumaudio/ableton-extension-sdk";
-createThemeProvider(document.documentElement, { defaultTheme: "dark" });
+```ts
+import themeCss from "@quantumaudio/ableton-extension-sdk/theme.css";
+import stylesCss from "@quantumaudio/ableton-extension-sdk/styles.css";
+// Inject into <style> when building the HTML string (see panel-document.ts)
 ```
 
-Open [`examples/index.html`](../examples/index.html) in a browser (or serve the repo) to preview buttons, sliders, dialogs, and theme toggle **without Live**.
+**Step D — theme toggle in plain JS:**
+
+```js
+document.documentElement.setAttribute("data-qa-theme", "light");
+```
+
+Open [`examples/index.html`](../examples/index.html) in a browser (or serve the repo) to preview buttons, sliders, dialogs, and theme toggle **without Live**. The rename dialog ([`examples/dialog.html`](../examples/dialog.html)) mirrors Ableton's official `interface.html` flow with QA styling.
 
 ---
 
-## 7. Talking to Live from the panel
+## 7. TypeScript ↔ webview JavaScript
 
-The webview cannot call `context.application` directly. It sends a result string back to your extension:
+The webview cannot call `context.application` directly. Your extension and the panel communicate in two directions:
 
-```js
-// Inside the webview (see ui/panel-body.html in the starter project)
-const message = { method: "close_and_send", params: [JSON.stringify({ tempo: 128 })] };
-if (window.webkit?.messageHandlers?.live) {
-  window.webkit.messageHandlers.live.postMessage(message);
-} else if (window.chrome?.webview) {
-  window.chrome.webview.postMessage(message);
-}
-```
+### Extension → webview (open with data)
 
-Your extension opens the dialog and handles the result:
+Pass values when building the HTML — placeholders, inline JSON, or attributes:
 
 ```ts
-const result = await context.ui.showModalDialog(dataUrl, 360, 420);
-if (result) {
-  const { tempo } = JSON.parse(result) as { tempo: number };
-  context.application.song.tempo = tempo;
-}
+// extension.ts
+const raw = await context.ui.showModalDialog(
+  panelDataUrl(song.tempo),  // panel-document.ts builds the HTML string
+  360,
+  440,
+);
 ```
+
+```ts
+// panel-document.ts — inject Live state into markup
+panelBody.replaceAll("{{INITIAL_TEMPO}}", String(tempo));
+```
+
+### Webview → extension (user result)
+
+Inside the panel, use **plain DOM** (`getElementById`, `addEventListener`) and send JSON back:
+
+```js
+// Inside the webview <script> (see ui/panel-body.html + PANEL_SCRIPT in panel-document.ts)
+function closeWith(payload) {
+  const message = { method: "close_and_send", params: [JSON.stringify(payload)] };
+  if (window.webkit?.messageHandlers?.live) {
+    window.webkit.messageHandlers.live.postMessage(message);
+  } else if (window.chrome?.webview) {
+    window.chrome.webview.postMessage(message);
+  }
+}
+
+document.getElementById("apply-button").addEventListener("click", () => {
+  closeWith({ action: "apply", tempo: Number(tempoSlider.value) });
+});
+```
+
+Your extension reads the string from `showModalDialog`:
+
+```ts
+if (!raw) return;
+const parsed = JSON.parse(raw) as { action: string; tempo?: number };
+if (parsed.action === "cancel") return;
+song.tempo = parsed.tempo!;
+```
+
+**You are styling native HTML elements** with `qa-*` classes — not mounting Vue components. Wire sliders, buttons, and inputs with standard browser APIs.
+
+More patterns (keyboard UX, shared types, `build.ts` loaders): **[plain-html-webview.md](./plain-html-webview.md)**.
 
 ---
 
@@ -184,6 +250,7 @@ Install the generated `.ablx` in Live → Settings → Extensions.
 
 | Goal | Where to go |
 |------|-------------|
+| Plain HTML panels (no Vue) | [plain-html-webview.md](./plain-html-webview.md) |
 | Copy UI patterns | [`examples/`](../examples/) static HTML + [`npm run dev:examples`](../README.md) Vue gallery |
 | Official Live API | [Ableton Extensions SDK docs](https://ableton.github.io/extensions-sdk/) |
 | Rich layouts (optional Vue) | [`examples/vue/`](../examples/vue/) |
@@ -205,4 +272,7 @@ Install the generated `.ablx` in Live → Settings → Extensions.
 
 ## Wiki
 
-A copy of this guide lives on the GitHub wiki: [Quick Start](https://github.com/QaAudio/qa-ableton-extension-sdk/wiki/Quick-Start).
+Copies of these guides live on the GitHub wiki:
+
+- [Quick Start](https://github.com/QaAudio/qa-ableton-extension-sdk/wiki/Quick-Start)
+- [Plain HTML webviews](https://github.com/QaAudio/qa-ableton-extension-sdk/wiki/Plain-HTML-Webview)

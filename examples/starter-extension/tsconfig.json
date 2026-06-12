@@ -7,9 +7,7 @@
     "esModuleInterop": true,
     "strict": true,
     "noEmit": true,
-    "rootDir": ".",
-    "lib": ["ESNext"],
-    "types": ["node"]
+    "rootDir": "./src"
   },
-  "include": ["src/**/*.ts", "build.ts"]
+  "include": ["src/**/*"]
 }

@@ -1,14 +1,16 @@
 # Quick start — build your first Live extension (no Vue required)
 
-This guide is for **music producers and beginners** who want a panel inside Ableton Live that looks native — without learning Vue or a heavy front-end framework.
+This guide is for **music producers and beginners** who want a panel inside Ableton Live that looks native — **without learning Vue** or a heavy front-end framework.
 
 You will:
 
 1. Install the official [Ableton Extensions SDK](https://ableton.github.io/extensions-sdk/) and this UI kit.
-2. Run the **starter extension** in [`examples/starter-extension/`](https://github.com/QaAudio/qa-ableton-extension-sdk/tree/main/examples/starter-extension) — a small **Tempo Tap** utility.
+2. Run the **starter extension** in [`examples/starter-extension/`](https://github.com/QaAudio/qa-ableton-extension-sdk/tree/main/examples/starter-extension) — a small **Tempo Tap** utility you can **copy as your project template**.
 3. Style the panel with plain HTML and CSS from `@quantumaudio/ableton-extension-sdk`.
 
-> **Vue is optional.** Knobs, faders, meters, and waveforms are Vue components. Buttons, sliders, labels, dialogs, and themes work with **plain HTML** — see the static demos in [`examples/`](https://github.com/QaAudio/qa-ableton-extension-sdk/tree/main/examples).
+> **Vue is optional.** Knobs, faders, meters, and waveforms need Vue. Buttons, sliders, labels, and themes work with **plain HTML**.
+>
+> **`interface.html` and TypeScript ↔ webview wiring:** [Plain-HTML-Webview](Plain-HTML-Webview) (full text: [docs/plain-html-webview.md](https://github.com/QaAudio/qa-ableton-extension-sdk/blob/main/docs/plain-html-webview.md))
 
 ---
 
@@ -18,9 +20,7 @@ You will:
 |-------|------|
 | **Ableton Extensions SDK** | Talks to Live (tempo, tracks, clips, commands). |
 | **This package** | Makes your webview look like Live (dark/light theme, sliders, buttons). |
-| **`examples/starter-extension/`** | A complete extension project you can copy. |
-
-The starter extension registers a command, opens a styled modal panel, lets you **tap in a tempo**, and applies it to the current Live set.
+| **`examples/starter-extension/`** | Complete template project — copy it to start a new extension. |
 
 ---
 
@@ -42,9 +42,25 @@ cd qa-ableton-extension-sdk
 npm ci
 ```
 
+**Your own extension:** copy the starter folder:
+
+```bash
+cp -r examples/starter-extension ../my-extension
+cd ../my-extension
+```
+
 ---
 
 ## 2. Install Ableton's Extensions SDK
+
+Copy Ableton's `.tgz` files into [`vendor/`](https://github.com/QaAudio/qa-ableton-extension-sdk/tree/main/vendor) at the repo root (see [vendor/README.md](https://github.com/QaAudio/qa-ableton-extension-sdk/blob/main/vendor/README.md)), then:
+
+```bash
+cd examples/starter-extension
+npm install
+```
+
+Or install tarballs from your download folder:
 
 ```bash
 cd examples/starter-extension
@@ -52,8 +68,6 @@ npm install /path/to/ableton-extensions-sdk-1.0.0-beta.0.tgz
 npm install -D /path/to/ableton-extensions-cli-1.0.0-beta.0.tgz
 npm install
 ```
-
-The last `npm install` links `@quantumaudio/ableton-extension-sdk` from the repo root (`file:../..`).
 
 ---
 
@@ -82,18 +96,23 @@ In Live, run command **`quantumaudio.starter.open-tempo-panel`**. The modal lets
 
 ---
 
-## 5. Project layout
+## 5. Project layout — `interface.html` and `ui/`
+
+Live loads **one file** (`dist/extension.js`). The panel is HTML inlined at build time and shown via `showModalDialog` as a data URL.
 
 ```
 examples/starter-extension/
 ├── manifest.json
 ├── build.ts
-├── src/extension.ts       ← activate(), command, Live API
-├── src/panel-document.ts    ← inline SDK CSS + HTML data URL
-└── ui/panel-body.html       ← plain HTML markup
+├── src/extension.ts         ← activate(), command, Live API
+├── src/panel-document.ts    ← full HTML document + inlined SDK CSS
+├── src/html.d.ts
+└── ui/panel-body.html       ← plain HTML markup (SDK classes)
 ```
 
-Live loads **one bundled file** (`dist/extension.js`) — no `node_modules` at runtime.
+Ableton's examples use a single **`src/interface.html`**. The starter uses **`ui/`** + a document builder — same result, easier to edit markup.
+
+Details: [Plain-HTML-Webview](Plain-HTML-Webview).
 
 ---
 
@@ -108,15 +127,17 @@ Live loads **one bundled file** (`dist/extension.js`) — no `node_modules` at r
 <button type="button" class="qa-button">Apply</button>
 ```
 
-Preview static demos: [examples/index.html](https://github.com/QaAudio/qa-ableton-extension-sdk/blob/main/examples/index.html).
+Inline `theme.css` + `styles.css` from the package in `<style>` (see `panel-document.ts`). Preview: [examples/index.html](https://github.com/QaAudio/qa-ableton-extension-sdk/blob/main/examples/index.html).
 
 ---
 
-## 7. Panel ↔ extension messaging
+## 7. TypeScript ↔ webview
 
-The webview posts `{ method: "close_and_send", params: [jsonString] }` via `webkit.messageHandlers.live` (macOS) or `chrome.webview` (Windows). The extension reads the string from `showModalDialog` and updates `song.tempo`.
+- **Extension → panel:** pass data when building the HTML (`{{PLACEHOLDERS}}`, inline JSON).
+- **Panel → extension:** `postMessage({ method: "close_and_send", params: [json] })` from the webview; parse the string returned by `showModalDialog`.
+- **Inside the panel:** plain DOM + `qa-*` CSS classes — no Vue.
 
-See [`src/panel-document.ts`](https://github.com/QaAudio/qa-ableton-extension-sdk/blob/main/examples/starter-extension/src/panel-document.ts) for the full pattern.
+See [Plain-HTML-Webview](Plain-HTML-Webview) and [`panel-document.ts`](https://github.com/QaAudio/qa-ableton-extension-sdk/blob/main/examples/starter-extension/src/panel-document.ts).
 
 ---
 
@@ -132,9 +153,13 @@ Install the `.ablx` in Live → Settings → Extensions.
 
 ## Next steps
 
-- [Component gallery](https://qaaudio.github.io/qa-ableton-extension-sdk/)
-- [README — full API reference](https://github.com/QaAudio/qa-ableton-extension-sdk#readme)
-- [Ableton Extensions SDK](https://ableton.github.io/extensions-sdk/)
+| Goal | Link |
+|------|------|
+| Plain HTML / `interface.html` | [Plain-HTML-Webview](Plain-HTML-Webview) |
+| [Quick Start (full)](https://github.com/QaAudio/qa-ableton-extension-sdk/blob/main/docs/quick-start.md) | Repo copy with troubleshooting |
+| Component gallery | [qaaudio.github.io/qa-ableton-extension-sdk](https://qaaudio.github.io/qa-ableton-extension-sdk/) |
+| README — API reference | [README](https://github.com/QaAudio/qa-ableton-extension-sdk#readme) |
+| Ableton Extensions SDK | [ableton.github.io/extensions-sdk](https://ableton.github.io/extensions-sdk/) |
 
 ---
 
