@@ -23,6 +23,7 @@ export { default as QaMeter } from "./QaMeter.vue";
 export { default as QaXYPad } from "./QaXYPad.vue";
 export { default as QaDevicePanel } from "./QaDevicePanel.vue";
 export { default as QaWaveform } from "./QaWaveform.vue";
+export type { BeatGridOptions, WaveformLoopRegion, WaveformPalette, WaveformSelection } from "./QaWaveform.vue";
 export { default as QaWaveformThumb } from "./QaWaveformThumb.vue";
 
 export { default as IconCode } from "./icons/IconCode.vue";

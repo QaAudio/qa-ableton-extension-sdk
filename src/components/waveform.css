@@ -19,6 +19,16 @@
   outline-offset: 0;
 }
 
+.qa-waveform__resize-handle {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 6px;
+  cursor: ns-resize;
+  touch-action: none;
+}
+
 .qa-waveform-thumb {
   display: block;
   width: 100%;
