@@ -110,6 +110,58 @@ function barColor(
   return resolveColor(canvas, options.color);
 }
 
+const BEAT_GRID_SUBDIVISIONS = 4;
+
+type BeatGridMarkKind = "quarter" | "beat" | "bar";
+
+function beatGridMarkStyle(
+  canvas: HTMLCanvasElement,
+  kind: BeatGridMarkKind,
+): { span: number; width: number; color: string; alpha: number } {
+  switch (kind) {
+    case "bar":
+      return {
+        span: 0.3,
+        width: 2,
+        color: "color-mix(in oklch, var(--c-text-primary) 92%, var(--c-waveform-accent))",
+        alpha: 1,
+      };
+    case "beat":
+      return {
+        span: 0.22,
+        width: 1.5,
+        color: "color-mix(in oklch, var(--c-text-primary) 82%, var(--c-control-border))",
+        alpha: 0.96,
+      };
+    case "quarter":
+      return {
+        span: 0.15,
+        width: 1,
+        color: "color-mix(in oklch, var(--c-text-secondary) 88%, var(--c-control-border))",
+        alpha: 0.9,
+      };
+  }
+}
+
+function drawBeatGridTick(
+  ctx: CanvasRenderingContext2D,
+  canvas: HTMLCanvasElement,
+  x: number,
+  height: number,
+  kind: BeatGridMarkKind,
+): void {
+  const { span, width: markWidth, color, alpha } = beatGridMarkStyle(canvas, kind);
+  const tickHeight = height * span;
+  const gap = (height - tickHeight * 2) / 2;
+
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.fillStyle = resolveColor(canvas, color);
+  ctx.fillRect(x - markWidth / 2, gap, markWidth, tickHeight);
+  ctx.fillRect(x - markWidth / 2, height - gap - tickHeight, markWidth, tickHeight);
+  ctx.restore();
+}
+
 function drawBeatGrid(
   ctx: CanvasRenderingContext2D,
   canvas: HTMLCanvasElement,
@@ -124,32 +176,43 @@ function drawBeatGrid(
   }
 
   const beatSec = 60 / bpm;
+  const quarterSec = beatSec / BEAT_GRID_SUBDIVISIONS;
   const beatsPerBar = timeSignature?.[0] ?? 4;
-  const startBeat = startSec / beatSec;
-  const endBeat = startBeat + durationSec / beatSec;
-  const firstBeat = Math.ceil(startBeat);
+  const clipEndSec = startSec + durationSec;
+  const firstQuarter = Math.ceil(startSec / quarterSec);
+  const lastQuarter = Math.floor(clipEndSec / quarterSec);
+  const viewSpan = viewRange.end - viewRange.start;
+  const visibleDurationSec = durationSec * viewSpan;
+  const pixelsPerQuarter =
+    visibleDurationSec > 0 ? (width / visibleDurationSec) * quarterSec : width;
+  const showQuarters = pixelsPerQuarter >= 5;
 
-  ctx.save();
-  for (let beat = firstBeat; beat <= endBeat; beat += 1) {
-    const t = (beat * beatSec - startSec) / durationSec;
+  for (let quarterIndex = firstQuarter; quarterIndex <= lastQuarter; quarterIndex += 1) {
+    const timeSec = quarterIndex * quarterSec;
+    const t = (timeSec - startSec) / durationSec;
     if (!isInView(t, viewRange)) continue;
-    const x = toScreenX(t, viewRange, width) + 0.5;
-    const beatInBar = Math.round(beat - Math.floor(beat / beatsPerBar) * beatsPerBar);
-    const isBar = beatInBar === 0 || beat % beatsPerBar === 0;
-    ctx.strokeStyle = resolveColor(
-      canvas,
-      isBar
-        ? "color-mix(in oklch, var(--c-text-primary) 75%, var(--c-control-border))"
-        : "color-mix(in oklch, var(--c-text-secondary) 65%, transparent)",
-    );
-    ctx.lineWidth = isBar ? 1.25 : 1;
-    ctx.globalAlpha = isBar ? 1 : 0.72;
-    ctx.beginPath();
-    ctx.moveTo(x, 0);
-    ctx.lineTo(x, height);
-    ctx.stroke();
+
+    const quarterInBeat =
+      ((quarterIndex % BEAT_GRID_SUBDIVISIONS) + BEAT_GRID_SUBDIVISIONS) %
+      BEAT_GRID_SUBDIVISIONS;
+    const isOnBeat = quarterInBeat === 0;
+    const beatNumber = Math.round(timeSec / beatSec);
+    const isBar = isOnBeat && beatNumber % beatsPerBar === 0;
+
+    let kind: BeatGridMarkKind;
+    if (isBar) {
+      kind = "bar";
+    } else if (isOnBeat) {
+      kind = "beat";
+    } else if (showQuarters) {
+      kind = "quarter";
+    } else {
+      continue;
+    }
+
+    const x = Math.round(toScreenX(t, viewRange, width)) + 0.5;
+    drawBeatGridTick(ctx, canvas, x, height, kind);
   }
-  ctx.restore();
 }
 
 function drawLoopRegion(
