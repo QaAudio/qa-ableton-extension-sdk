@@ -10,6 +10,7 @@ import {
   type WaveformViewRange,
 } from "../audio/waveform-draw.js";
 import QaIconButton from "./QaIconButton.vue";
+import QaValueField from "./QaValueField.vue";
 import IconZoomIn from "./icons/IconZoomIn.vue";
 import IconZoomOut from "./icons/IconZoomOut.vue";
 import IconZoomReset from "./icons/IconZoomReset.vue";
@@ -18,7 +19,11 @@ export type { BeatGridOptions, WaveformLoopRegion, WaveformPalette, WaveformSele
 
 const FULL_VIEW: WaveformViewRange = { start: 0, end: 1 };
 const ZOOM_FACTOR = 1.25;
-const SCROLL_THUMB_MIN_PX = 24;
+const MINIMAP_VIEWPORT_MIN_PX = 28;
+const MINIMAP_HEIGHT = 24;
+const PEAK_SCALE_MIN = 0.1;
+const PEAK_SCALE_MAX = 10;
+const PEAK_SCALE_DEFAULT = 1;
 
 /**
  * Canvas waveform display with optional playhead, selection, beat grid, loop region, seek/drag interaction, and zoom.
@@ -39,6 +44,7 @@ const props = withDefaults(
     resizable?: boolean;
     zoomable?: boolean;
     viewRange?: WaveformViewRange;
+    scale?: number;
     height?: number;
     minHeight?: number;
     maxHeight?: number;
@@ -63,12 +69,15 @@ const emit = defineEmits<{
   "update:loopRegion": [region: WaveformLoopRegion];
   "update:height": [height: number];
   "update:viewRange": [range: WaveformViewRange];
+  "update:scale": [scale: number];
 }>();
 
 const rootRef = ref<HTMLElement | null>(null);
 const canvasRef = ref<HTMLCanvasElement | null>(null);
-const scrollTrackRef = ref<HTMLElement | null>(null);
+const minimapCanvasRef = ref<HTMLCanvasElement | null>(null);
+const minimapTrackRef = ref<HTMLElement | null>(null);
 const internalViewRange = ref<WaveformViewRange>({ ...FULL_VIEW });
+const internalScale = ref(PEAK_SCALE_DEFAULT);
 let resizeObserver: ResizeObserver | null = null;
 let themeObserver: MutationObserver | null = null;
 let selectStart: number | null = null;
@@ -77,14 +86,16 @@ let loopDrag: "start" | "end" | null = null;
 let resizeDrag = false;
 let resizeStartY = 0;
 let resizeStartHeight = 0;
-let scrollDrag = false;
-let scrollDragStartX = 0;
-let scrollDragStartViewStart = 0;
+let minimapDragStartX = 0;
+let minimapDragStartViewStart = 0;
+const minimapDrag = ref(false);
 let trackWidthPx = 0;
 
 const HANDLE_HIT_PX = 8;
 
 const activeViewRange = computed<WaveformViewRange>(() => props.viewRange ?? internalViewRange.value);
+
+const activeScale = computed(() => props.scale ?? internalScale.value);
 
 const viewSpan = computed(() => activeViewRange.value.end - activeViewRange.value.start);
 
@@ -94,10 +105,10 @@ const isZoomed = computed(() => viewSpan.value < 1 - 1e-6);
 
 const canZoomIn = computed(() => viewSpan.value > minViewSpan.value + 1e-6);
 
-const scrollThumbStyle = computed(() => {
+const minimapViewportStyle = computed(() => {
   const span = viewSpan.value;
   if (span >= 1) return { width: "100%", left: "0%" };
-  const widthPct = Math.max(span, SCROLL_THUMB_MIN_PX / Math.max(trackWidthPx, 1));
+  const widthPct = Math.max(span, MINIMAP_VIEWPORT_MIN_PX / Math.max(trackWidthPx, 1));
   const travel = 1 - widthPct;
   const leftPct = travel > 0 ? (activeViewRange.value.start / (1 - span)) * travel : 0;
   return {
@@ -105,6 +116,15 @@ const scrollThumbStyle = computed(() => {
     left: `${leftPct * 100}%`,
   };
 });
+
+function formatPeakScale(value: number): string {
+  return `${value.toFixed(1)}x`;
+}
+
+function parsePeakScale(text: string): number | null {
+  const parsed = Number.parseFloat(text.replace(/x$/i, "").trim());
+  return Number.isFinite(parsed) ? parsed : null;
+}
 
 function clamp01(value: number): number {
   return Math.min(1, Math.max(0, value));
@@ -127,6 +147,14 @@ function setViewRange(next: WaveformViewRange): void {
     internalViewRange.value = clamped;
   }
   emit("update:viewRange", clamped);
+}
+
+function setScale(value: number): void {
+  const next = Math.min(PEAK_SCALE_MAX, Math.max(PEAK_SCALE_MIN, value));
+  if (props.scale === undefined) {
+    internalScale.value = next;
+  }
+  emit("update:scale", next);
 }
 
 function zoomAt(factor: number, anchor: number): void {
@@ -177,6 +205,29 @@ function resetZoom(): void {
   setViewRange({ ...FULL_VIEW });
 }
 
+function redrawMinimap(): void {
+  if (!isZoomed.value) return;
+  const canvas = minimapCanvasRef.value;
+  const root = rootRef.value;
+  if (!canvas || !root) return;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+  const width = minimapTrackRef.value?.clientWidth ?? root.clientWidth;
+  trackWidthPx = width;
+  drawWaveform(canvas, ctx, {
+    peaks: props.peaks,
+    width,
+    height: MINIMAP_HEIGHT,
+    color: props.color,
+    accentColor: props.accentColor,
+    palette: props.palette,
+    colorGuidance: props.colorGuidance,
+    peakScale: activeScale.value,
+    viewRange: FULL_VIEW,
+    showPlayhead: false,
+  });
+}
+
 function redraw(): void {
   const canvas = canvasRef.value;
   const root = rootRef.value;
@@ -184,7 +235,7 @@ function redraw(): void {
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
   const width = root.clientWidth;
-  trackWidthPx = scrollTrackRef.value?.clientWidth ?? width;
+  trackWidthPx = minimapTrackRef.value?.clientWidth ?? width;
   drawWaveform(canvas, ctx, {
     peaks: props.peaks,
     width,
@@ -200,7 +251,9 @@ function redraw(): void {
     playhead: props.playhead,
     showPlayhead: props.playhead !== undefined,
     viewRange: activeViewRange.value,
+    peakScale: activeScale.value,
   });
+  redrawMinimap();
 }
 
 function positionFromEvent(event: MouseEvent | PointerEvent): number {
@@ -243,12 +296,13 @@ function isControlTarget(target: EventTarget | null): boolean {
   return Boolean(
     target.closest(".qa-waveform__resize-handle") ||
       target.closest(".qa-waveform__zoom") ||
-      target.closest(".qa-waveform__scroll"),
+      target.closest(".qa-waveform__minimap") ||
+      target.closest(".qa-waveform__footer"),
   );
 }
 
 function onClick(event: MouseEvent): void {
-  if (!props.interactive || selecting || loopDrag || resizeDrag || scrollDrag) return;
+  if (!props.interactive || selecting || loopDrag || resizeDrag || minimapDrag.value) return;
   if (isControlTarget(event.target)) return;
   emit("seek", positionFromEvent(event));
 }
@@ -317,15 +371,16 @@ function onWheel(event: WheelEvent): void {
 
 function viewStartFromTrackX(trackX: number, trackWidth: number): number {
   const span = viewSpan.value;
-  const widthPct = Math.max(span, SCROLL_THUMB_MIN_PX / Math.max(trackWidth, 1));
+  const widthPct = Math.max(span, MINIMAP_VIEWPORT_MIN_PX / Math.max(trackWidth, 1));
   const thumbWidth = widthPct * trackWidth;
   const travel = Math.max(1, trackWidth - thumbWidth);
   const ratio = Math.min(1, Math.max(0, trackX / travel));
   return ratio * (1 - span);
 }
 
-function onScrollTrackDown(event: PointerEvent): void {
-  const track = scrollTrackRef.value;
+function onMinimapTrackDown(event: PointerEvent): void {
+  if ((event.target as HTMLElement).closest(".qa-waveform__minimap-viewport")) return;
+  const track = minimapTrackRef.value;
   if (!track) return;
   const rect = track.getBoundingClientRect();
   const x = event.clientX - rect.left;
@@ -334,30 +389,30 @@ function onScrollTrackDown(event: PointerEvent): void {
   setViewRange({ start: newStart, end: newStart + span });
 }
 
-function onScrollThumbDown(event: PointerEvent): void {
-  scrollDrag = true;
-  scrollDragStartX = event.clientX;
-  scrollDragStartViewStart = activeViewRange.value.start;
+function onMinimapViewportDown(event: PointerEvent): void {
+  minimapDrag.value = true;
+  minimapDragStartX = event.clientX;
+  minimapDragStartViewStart = activeViewRange.value.start;
   (event.currentTarget as HTMLElement).setPointerCapture(event.pointerId);
   event.preventDefault();
 }
 
-function onScrollPointermove(event: PointerEvent): void {
-  if (!scrollDrag) return;
-  const track = scrollTrackRef.value;
+function onMinimapPointermove(event: PointerEvent): void {
+  if (!minimapDrag.value) return;
+  const track = minimapTrackRef.value;
   if (!track) return;
   const rect = track.getBoundingClientRect();
   const span = viewSpan.value;
-  const widthPct = Math.max(span, SCROLL_THUMB_MIN_PX / Math.max(rect.width, 1));
+  const widthPct = Math.max(span, MINIMAP_VIEWPORT_MIN_PX / Math.max(rect.width, 1));
   const thumbWidth = widthPct * rect.width;
   const travel = Math.max(1, rect.width - thumbWidth);
-  const deltaX = event.clientX - scrollDragStartX;
+  const deltaX = event.clientX - minimapDragStartX;
   const deltaView = (deltaX / travel) * (1 - span);
-  setViewRange({ start: scrollDragStartViewStart + deltaView, end: scrollDragStartViewStart + deltaView + span });
+  setViewRange({ start: minimapDragStartViewStart + deltaView, end: minimapDragStartViewStart + deltaView + span });
 }
 
-function onScrollPointerup(): void {
-  scrollDrag = false;
+function onMinimapPointerup(): void {
+  minimapDrag.value = false;
 }
 
 function onResizePointerdown(event: PointerEvent): void {
@@ -412,7 +467,10 @@ watch(
     props.color,
     props.accentColor,
     props.viewRange,
+    props.scale,
     activeViewRange.value,
+    activeScale.value,
+    isZoomed.value,
   ],
   () => redraw(),
   { deep: true },
@@ -434,6 +492,7 @@ watch(
     :class="{
       'qa-waveform--interactive': interactive,
       'qa-waveform--zoomed': zoomable && isZoomed,
+      'qa-waveform--resizable': resizable,
     }"
     :style="{ height: `${height}px` }"
     :tabindex="interactive ? 0 : undefined"
@@ -465,35 +524,53 @@ watch(
       >
         <IconZoomReset />
       </QaIconButton>
+      <QaValueField
+        class="qa-waveform__scale"
+        :model-value="activeScale"
+        :min="PEAK_SCALE_MIN"
+        :max="PEAK_SCALE_MAX"
+        :step="0.1"
+        :default-value="PEAK_SCALE_DEFAULT"
+        taper="log"
+        :format="formatPeakScale"
+        :parse="parsePeakScale"
+        width="3.4em"
+        label="Scaling"
+        @update:model-value="setScale"
+        @pointerdown.stop
+      />
     </div>
     <div
       v-if="zoomable && isZoomed"
-      class="qa-waveform__scroll"
-      @pointerdown.stop
-      @pointermove="onScrollPointermove"
-      @pointerup="onScrollPointerup"
-      @pointercancel="onScrollPointerup"
+      ref="minimapTrackRef"
+      class="qa-waveform__minimap"
+      @pointerdown.stop="onMinimapTrackDown"
+      @pointermove="onMinimapPointermove"
+      @pointerup="onMinimapPointerup"
+      @pointercancel="onMinimapPointerup"
     >
+      <canvas
+        ref="minimapCanvasRef"
+        class="qa-waveform__minimap-canvas"
+        :height="MINIMAP_HEIGHT"
+        aria-hidden="true"
+      />
       <div
-        ref="scrollTrackRef"
-        class="qa-waveform__scroll-track"
-        @pointerdown="onScrollTrackDown"
-      >
-        <div
-          class="qa-waveform__scroll-thumb"
-          :style="scrollThumbStyle"
-          @pointerdown.stop="onScrollThumbDown"
-        />
-      </div>
+        class="qa-waveform__minimap-viewport"
+        :class="{ 'qa-waveform__minimap-viewport--dragging': minimapDrag }"
+        :style="minimapViewportStyle"
+        @pointerdown.stop="onMinimapViewportDown"
+      />
     </div>
-    <div
-      v-if="resizable"
-      class="qa-waveform__resize-handle"
-      title="Resize waveform"
-      @pointerdown.stop="onResizePointerdown"
-      @pointermove="onResizePointermove"
-      @pointerup="onResizePointerup"
-      @pointercancel="onResizePointerup"
-    />
+    <div v-if="resizable" class="qa-waveform__footer" @pointerdown.stop>
+      <div
+        class="qa-waveform__resize-handle"
+        title="Resize waveform"
+        @pointerdown.stop="onResizePointerdown"
+        @pointermove="onResizePointermove"
+        @pointerup="onResizePointerup"
+        @pointercancel="onResizePointerup"
+      />
+    </div>
   </div>
 </template>

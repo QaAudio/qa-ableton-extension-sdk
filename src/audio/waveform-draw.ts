@@ -30,6 +30,8 @@ export type WaveformDrawOptions = {
   loopFill?: string;
   showPlayhead?: boolean;
   viewRange?: WaveformViewRange;
+  /** Vertical peak amplitude multiplier (default 1). */
+  peakScale?: number;
 };
 
 const MIN_LOOP_WIDTH = 0.01;
@@ -161,24 +163,24 @@ function beatGridMarkStyle(
   switch (kind) {
     case "bar":
       return {
-        span: 0.3,
-        width: 2,
+        span: 0.2,
+        width: 1,
         color: "var(--c-text-primary)",
-        alpha: 1,
+        alpha: 0.55,
       };
     case "beat":
       return {
-        span: 0.22,
-        width: 1.5,
+        span: 0.15,
+        width: 0.5,
         color: "var(--c-text-primary)",
-        alpha: 0.85,
+        alpha: 0.75,
       };
     case "quarter":
       return {
         span: 0.15,
-        width: 1,
+        width: 0.5,
         color: "var(--c-text-secondary)",
-        alpha: 0.75,
+        alpha: 0.55,
       };
   }
 }
@@ -187,12 +189,14 @@ function drawBeatGridTick(
   ctx: CanvasRenderingContext2D,
   canvas: HTMLCanvasElement,
   x: number,
+  direction: "up" | "down",
   height: number,
   kind: BeatGridMarkKind,
 ): void {
   const { span, width: lineWidth, color, alpha } = beatGridMarkStyle(canvas, kind);
-  const tickHeight = height * span;
-  const gap = (height - tickHeight * 2) / 2;
+  const tickHeight = (height / 3) * span;
+
+  const gap = direction === "up" ? 0 : tickHeight;
   const topEnd = gap + tickHeight;
   const bottomStart = height - gap - tickHeight;
 
@@ -259,7 +263,8 @@ function drawBeatGrid(
     }
 
     const x = Math.round(toScreenX(t, viewRange, width)) + 0.5;
-    drawBeatGridTick(ctx, canvas, x, height, kind);
+    drawBeatGridTick(ctx, canvas, x, "up", height, kind);
+    drawBeatGridTick(ctx, canvas, x, "down", height, kind);
   }
 }
 
@@ -339,6 +344,7 @@ export function drawWaveform(
     loopFill,
     showPlayhead = true,
     viewRange: rawViewRange,
+    peakScale = 1,
   } = options;
 
   const viewRange = normalizeViewRange(rawViewRange);
@@ -381,7 +387,7 @@ export function drawWaveform(
   for (let i = 0; i < visibleCount; i++) {
     const peakIndex = startIdx + i;
     const peak = peaks[peakIndex] ?? 0;
-    const barHeight = Math.max(1, peak * (height / 2 - 1));
+    const barHeight = Math.max(1, peak * peakScale * (height / 2 - 1));
     const x = i * barWidth;
     const normalized = peakIndex / peaks.length;
     const inSelection =

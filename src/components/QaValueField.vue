@@ -23,6 +23,7 @@ const props = withDefaults(
     width?: string;
     label?: string;
     disabled?: boolean;
+    taper?: "linear" | "log";
   }>(),
   {},
 );
@@ -43,6 +44,7 @@ const spec = computed(() =>
     defaultValue: props.defaultValue,
     unit: props.unit,
     format: props.format,
+    taper: props.taper,
   }),
 );
 

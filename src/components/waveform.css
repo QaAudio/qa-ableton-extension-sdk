@@ -29,6 +29,7 @@
   right: 4px;
   z-index: 1;
   display: flex;
+  align-items: center;
   gap: 0;
   padding: 2px;
   border-radius: calc(0.35rem + 2px);
@@ -50,51 +51,90 @@
   border-bottom-left-radius: 0.35rem;
 }
 
-.qa-waveform__zoom .qa-icon-button:last-child {
+.qa-waveform__zoom .qa-icon-button:last-of-type {
   border-top-right-radius: 0.35rem;
   border-bottom-right-radius: 0.35rem;
 }
 
-.qa-waveform__scroll {
+.qa-waveform__zoom .qa-value-field {
+  gap: 0;
+  margin-left: 4px;
+  padding-left: 4px;
+  border-left: 1px solid var(--c-control-border);
+}
+
+.qa-waveform__scale > .qa-value-field__label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.qa-waveform__zoom .qa-value-field__box {
+  min-width: unset;
+  height: 1.5em;
+  font-size: 0.85em;
+  border-radius: 0.35rem;
+  cursor: ns-resize;
+}
+
+.qa-waveform__footer {
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
-  height: 8px;
-  padding: 0 2px 2px;
   z-index: 1;
+  display: flex;
+  flex-direction: column;
+  pointer-events: none;
 }
 
-.qa-waveform__scroll-track {
-  position: relative;
-  height: 100%;
-  background: var(--c-control-bg--600);
-  border: 1px solid var(--c-control-border);
-  border-radius: 4px;
+.qa-waveform__footer > * {
+  pointer-events: auto;
+}
+
+.qa-waveform__minimap {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  height: 24px;
+  background: transparent;
   cursor: pointer;
+  touch-action: none;
 }
 
-.qa-waveform__scroll-thumb {
+.qa-waveform__minimap-canvas {
+  display: block;
+  width: 100%;
+  pointer-events: none;
+}
+
+.qa-waveform__minimap-viewport {
   position: absolute;
   top: 0;
   bottom: 0;
-  min-width: 24px;
-  background: var(--c-control-bg--400);
-  border: 1px solid var(--c-control-border);
-  border-radius: 3px;
+  box-sizing: border-box;
+  border: 1px solid var(--c-control-outline);
+  background: color-mix(in oklch, var(--c-highlight--primary) 18%, transparent);
   cursor: grab;
+  touch-action: none;
 }
 
-.qa-waveform__scroll-thumb:active {
+.qa-waveform__minimap-viewport--dragging,
+.qa-waveform__minimap-viewport:active {
   cursor: grabbing;
+  background: color-mix(in oklch, var(--c-highlight--primary) 28%, transparent);
 }
 
 .qa-waveform__resize-handle {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 6px;
+  height: 2px;
   cursor: ns-resize;
   touch-action: none;
 }
