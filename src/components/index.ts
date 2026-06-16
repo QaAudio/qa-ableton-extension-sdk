@@ -14,6 +14,7 @@ export { default as QaSlider } from "./QaSlider.vue";
 export { default as QaKnob } from "./QaKnob.vue";
 export { default as QaFader } from "./QaFader.vue";
 export { default as QaValueField } from "./QaValueField.vue";
+export { default as QaValueFieldGroup } from "./QaValueFieldGroup.vue";
 export { default as QaToggle } from "./QaToggle.vue";
 export { default as QaPowerButton } from "./QaPowerButton.vue";
 export { default as QaSelect } from "./QaSelect.vue";
