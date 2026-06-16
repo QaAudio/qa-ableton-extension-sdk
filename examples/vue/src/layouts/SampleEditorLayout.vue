@@ -48,6 +48,7 @@ function onSelect(value: { start: number; end: number }): void {
       :playhead="playhead"
       :selection="selection"
       interactive
+      zoomable
       :height="72"
       @seek="onSeek"
       @select="onSelect"

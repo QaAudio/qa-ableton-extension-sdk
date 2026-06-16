@@ -196,7 +196,7 @@ Requires **Node ≥ 24** for typechecking.
 | Component | Purpose |
 |-----------|---------|
 | `QaMeter` | Mono/stereo level meter (consumer-driven levels) |
-| `QaWaveform` | Canvas waveform with playhead, selection, seek |
+| `QaWaveform` | Canvas waveform with playhead, selection, seek, optional zoom (`zoomable`: Ctrl+scroll to zoom, Shift+scroll to pan, scrollbar when zoomed) |
 | `QaWaveformThumb` | Compact list thumbnail |
 
 ### Inputs & dialogs

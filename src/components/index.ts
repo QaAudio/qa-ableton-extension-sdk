@@ -23,7 +23,13 @@ export { default as QaMeter } from "./QaMeter.vue";
 export { default as QaXYPad } from "./QaXYPad.vue";
 export { default as QaDevicePanel } from "./QaDevicePanel.vue";
 export { default as QaWaveform } from "./QaWaveform.vue";
-export type { BeatGridOptions, WaveformLoopRegion, WaveformPalette, WaveformSelection } from "./QaWaveform.vue";
+export type {
+  BeatGridOptions,
+  WaveformLoopRegion,
+  WaveformPalette,
+  WaveformSelection,
+  WaveformViewRange,
+} from "./QaWaveform.vue";
 export { default as QaWaveformThumb } from "./QaWaveformThumb.vue";
 
 export { default as IconCode } from "./icons/IconCode.vue";
@@ -44,5 +50,8 @@ export { default as IconPlay } from "./icons/IconPlay.vue";
 export { default as IconPause } from "./icons/IconPause.vue";
 export { default as IconStop } from "./icons/IconStop.vue";
 export { default as IconRecord } from "./icons/IconRecord.vue";
+export { default as IconZoomIn } from "./icons/IconZoomIn.vue";
+export { default as IconZoomOut } from "./icons/IconZoomOut.vue";
+export { default as IconZoomReset } from "./icons/IconZoomReset.vue";
 
 export { useTheme } from "../composables/useTheme.js";
