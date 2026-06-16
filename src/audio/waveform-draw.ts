@@ -35,12 +35,52 @@ export type WaveformDrawOptions = {
 const MIN_LOOP_WIDTH = 0.01;
 const FULL_VIEW: WaveformViewRange = { start: 0, end: 1 };
 
+let cssColorProbe: HTMLDivElement | null = null;
+
+function colorResolutionRoot(canvas: HTMLCanvasElement): HTMLElement {
+  if (canvas.isConnected) {
+    const root = canvas.getRootNode();
+    if (root instanceof ShadowRoot && root.host instanceof HTMLElement) {
+      return root.host;
+    }
+    if (canvas.parentElement) {
+      return canvas.parentElement;
+    }
+  }
+  return document.documentElement;
+}
+
 function resolveColor(canvas: HTMLCanvasElement, color: string): string {
-  if (!color.startsWith("var(")) return color;
-  const match = /--[\w-]+/.exec(color);
-  if (!match) return color;
-  const resolved = getComputedStyle(canvas).getPropertyValue(match[0]).trim();
-  return resolved || color;
+  if (!color.includes("var(") && !color.includes("color-mix(")) {
+    return color;
+  }
+  if (typeof document === "undefined") return color;
+
+  if (!cssColorProbe) {
+    cssColorProbe = document.createElement("div");
+    cssColorProbe.style.display = "none";
+    cssColorProbe.style.position = "absolute";
+    cssColorProbe.setAttribute("aria-hidden", "true");
+  }
+
+  const root = colorResolutionRoot(canvas);
+  if (!cssColorProbe.isConnected || cssColorProbe.parentElement !== root) {
+    root.appendChild(cssColorProbe);
+  }
+
+  cssColorProbe.style.color = color;
+  const resolved = getComputedStyle(cssColorProbe).color.trim();
+  if (resolved) return resolved;
+
+  if (color.startsWith("var(")) {
+    const match = /--[\w-]+/.exec(color);
+    if (match) {
+      const fromCanvas = getComputedStyle(canvas).getPropertyValue(match[0]).trim();
+      if (fromCanvas) return fromCanvas;
+    }
+  }
+
+  return color;
 }
 
 function clamp01(value: number): number {
@@ -123,22 +163,22 @@ function beatGridMarkStyle(
       return {
         span: 0.3,
         width: 2,
-        color: "color-mix(in oklch, var(--c-text-primary) 92%, var(--c-waveform-accent))",
+        color: "var(--c-text-primary)",
         alpha: 1,
       };
     case "beat":
       return {
         span: 0.22,
         width: 1.5,
-        color: "color-mix(in oklch, var(--c-text-primary) 82%, var(--c-control-border))",
-        alpha: 0.96,
+        color: "var(--c-text-primary)",
+        alpha: 0.85,
       };
     case "quarter":
       return {
         span: 0.15,
         width: 1,
-        color: "color-mix(in oklch, var(--c-text-secondary) 88%, var(--c-control-border))",
-        alpha: 0.9,
+        color: "var(--c-text-secondary)",
+        alpha: 0.75,
       };
   }
 }
@@ -150,15 +190,23 @@ function drawBeatGridTick(
   height: number,
   kind: BeatGridMarkKind,
 ): void {
-  const { span, width: markWidth, color, alpha } = beatGridMarkStyle(canvas, kind);
+  const { span, width: lineWidth, color, alpha } = beatGridMarkStyle(canvas, kind);
   const tickHeight = height * span;
   const gap = (height - tickHeight * 2) / 2;
+  const topEnd = gap + tickHeight;
+  const bottomStart = height - gap - tickHeight;
 
   ctx.save();
+  ctx.strokeStyle = resolveColor(canvas, color);
+  ctx.lineWidth = lineWidth;
   ctx.globalAlpha = alpha;
-  ctx.fillStyle = resolveColor(canvas, color);
-  ctx.fillRect(x - markWidth / 2, gap, markWidth, tickHeight);
-  ctx.fillRect(x - markWidth / 2, height - gap - tickHeight, markWidth, tickHeight);
+  ctx.lineCap = "butt";
+  ctx.beginPath();
+  ctx.moveTo(x, gap);
+  ctx.lineTo(x, topEnd);
+  ctx.moveTo(x, bottomStart);
+  ctx.lineTo(x, height - gap);
+  ctx.stroke();
   ctx.restore();
 }
 
