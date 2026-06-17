@@ -26,6 +26,8 @@
   --c-bg--0500: oklch(from var(--p-live-ui-bg) l c h);
   --c-text-primary: oklch(from var(--p-live-text-primary) l c h);
   --c-text-secondary: oklch(from var(--p-live-text-secondary) l c h);
+  --c-control-bg--200: oklch(from var(--p-live-control-bg) calc(l * 0.96) c h);
+  --c-control-bg--300: oklch(from var(--p-live-control-bg) calc(l * 0.93) c h);
   --c-control-bg--400: oklch(from var(--p-live-control-bg) calc(l * 0.9) c h);
   --c-control-bg--500: oklch(from var(--p-live-control-bg) l c h);
   --c-control-border: oklch(from var(--p-live-control-border) l c h);
@@ -76,6 +78,8 @@
   --c-bg--0500: oklch(from var(--p-live-ui-bg) l c h);
   --c-text-primary: oklch(from var(--p-live-text-primary) l c h);
   --c-text-secondary: oklch(from var(--p-live-text-secondary) l c h);
+  --c-control-bg--200: oklch(from var(--p-live-control-bg) calc(l * 1.02) c h);
+  --c-control-bg--300: oklch(from var(--p-live-control-bg) calc(l * 0.98) c h);
   --c-control-bg--400: oklch(from var(--p-live-control-bg) calc(l * 0.96) c h);
   --c-control-bg--500: oklch(from var(--p-live-control-bg) l c h);
   --c-control-border: oklch(from var(--p-live-control-border) l c h);
