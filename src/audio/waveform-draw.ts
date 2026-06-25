@@ -1,3 +1,5 @@
+import { resolveCanvasColor } from "../lib/canvas-color.js";
+
 export type WaveformPalette = "hot" | "cold" | "mono";
 
 export type WaveformSelection = { start: number; end: number };
@@ -37,54 +39,6 @@ export type WaveformDrawOptions = {
 const MIN_LOOP_WIDTH = 0.01;
 const FULL_VIEW: WaveformViewRange = { start: 0, end: 1 };
 
-let cssColorProbe: HTMLDivElement | null = null;
-
-function colorResolutionRoot(canvas: HTMLCanvasElement): HTMLElement {
-  if (canvas.isConnected) {
-    const root = canvas.getRootNode();
-    if (root instanceof ShadowRoot && root.host instanceof HTMLElement) {
-      return root.host;
-    }
-    if (canvas.parentElement) {
-      return canvas.parentElement;
-    }
-  }
-  return document.documentElement;
-}
-
-function resolveColor(canvas: HTMLCanvasElement, color: string): string {
-  if (!color.includes("var(") && !color.includes("color-mix(")) {
-    return color;
-  }
-  if (typeof document === "undefined") return color;
-
-  if (!cssColorProbe) {
-    cssColorProbe = document.createElement("div");
-    cssColorProbe.style.display = "none";
-    cssColorProbe.style.position = "absolute";
-    cssColorProbe.setAttribute("aria-hidden", "true");
-  }
-
-  const root = colorResolutionRoot(canvas);
-  if (!cssColorProbe.isConnected || cssColorProbe.parentElement !== root) {
-    root.appendChild(cssColorProbe);
-  }
-
-  cssColorProbe.style.color = color;
-  const resolved = getComputedStyle(cssColorProbe).color.trim();
-  if (resolved) return resolved;
-
-  if (color.startsWith("var(")) {
-    const match = /--[\w-]+/.exec(color);
-    if (match) {
-      const fromCanvas = getComputedStyle(canvas).getPropertyValue(match[0]).trim();
-      if (fromCanvas) return fromCanvas;
-    }
-  }
-
-  return color;
-}
-
 function clamp01(value: number): number {
   return Math.min(1, Math.max(0, value));
 }
@@ -122,34 +76,36 @@ export function paletteColor(palette: WaveformPalette, t: number): string {
   }
 }
 
-function barColor(
-  canvas: HTMLCanvasElement,
-  options: WaveformDrawOptions,
+function barColorResolved(
+  ctx: {
+    baseColor: string;
+    accentColor: string;
+    loopAccentColor: string;
+    palette: WaveformPalette;
+    colorGuidance?: number[];
+  },
   peakIndex: number,
   peakCount: number,
   peak: number,
   inSelection: boolean,
   inLoop: boolean,
+  loopActive: boolean,
 ): string {
-  if (inSelection) {
-    return resolveColor(canvas, options.accentColor ?? options.color);
-  }
-  if (inLoop && options.loopActive) {
-    return resolveColor(canvas, options.accentColor ?? "var(--c-waveform-accent)");
-  }
-  const palette = options.palette ?? "hot";
-  if (options.colorGuidance && options.colorGuidance.length > 0 && palette !== "mono") {
+  if (inSelection) return ctx.accentColor;
+  if (inLoop && loopActive) return ctx.loopAccentColor;
+  const palette = ctx.palette;
+  if (ctx.colorGuidance && ctx.colorGuidance.length > 0 && palette !== "mono") {
     const guidanceIndex = Math.min(
-      options.colorGuidance.length - 1,
-      Math.floor((peakIndex / peakCount) * options.colorGuidance.length),
+      ctx.colorGuidance.length - 1,
+      Math.floor((peakIndex / peakCount) * ctx.colorGuidance.length),
     );
-    const guidance = options.colorGuidance[guidanceIndex] ?? 0;
+    const guidance = ctx.colorGuidance[guidanceIndex] ?? 0;
     return paletteColor(palette, guidance);
   }
   if (palette === "mono") {
     return paletteColor("mono", peak);
   }
-  return resolveColor(canvas, options.color);
+  return ctx.baseColor;
 }
 
 const BEAT_GRID_SUBDIVISIONS = 4;
@@ -201,7 +157,7 @@ function drawBeatGridTick(
   const bottomStart = height - gap - tickHeight;
 
   ctx.save();
-  ctx.strokeStyle = resolveColor(canvas, color);
+  ctx.strokeStyle = resolveCanvasColor(canvas, color);
   ctx.lineWidth = lineWidth;
   ctx.globalAlpha = alpha;
   ctx.lineCap = "butt";
@@ -288,8 +244,8 @@ function drawLoopRegion(
 
   ctx.save();
   ctx.fillStyle = loopFill
-    ? resolveColor(canvas, loopFill)
-    : resolveColor(
+    ? resolveCanvasColor(canvas, loopFill)
+    : resolveCanvasColor(
         canvas,
         loopActive
           ? "color-mix(in oklch, var(--c-highlight--primary) 22%, transparent)"
@@ -301,7 +257,7 @@ function drawLoopRegion(
   const loopEnd = clamp01(loopRegion.end);
   if (isInView(loopStart, viewRange)) {
     const x = toScreenX(loopStart, viewRange, width) + 0.5;
-    ctx.strokeStyle = resolveColor(canvas, loopActive ? "var(--c-highlight--primary)" : "var(--c-text-secondary)");
+    ctx.strokeStyle = resolveCanvasColor(canvas, loopActive ? "var(--c-highlight--primary)" : "var(--c-text-secondary)");
     ctx.lineWidth = 1;
     ctx.globalAlpha = loopActive ? 0.9 : 0.55;
     ctx.beginPath();
@@ -311,7 +267,7 @@ function drawLoopRegion(
   }
   if (isInView(loopEnd, viewRange)) {
     const x = toScreenX(loopEnd, viewRange, width) + 0.5;
-    ctx.strokeStyle = resolveColor(canvas, loopActive ? "var(--c-highlight--primary)" : "var(--c-text-secondary)");
+    ctx.strokeStyle = resolveCanvasColor(canvas, loopActive ? "var(--c-highlight--primary)" : "var(--c-text-secondary)");
     ctx.lineWidth = 1;
     ctx.globalAlpha = loopActive ? 0.9 : 0.55;
     ctx.beginPath();
@@ -364,8 +320,8 @@ export function drawWaveform(
   }
 
   const selFill = selectionFill
-    ? resolveColor(canvas, selectionFill)
-    : resolveColor(canvas, "var(--c-selection)");
+    ? resolveCanvasColor(canvas, selectionFill)
+    : resolveCanvasColor(canvas, "var(--c-selection)");
   const centerY = height / 2;
 
   if (selection) {
@@ -383,31 +339,60 @@ export function drawWaveform(
   const endIdx = Math.min(peaks.length, Math.ceil(viewRange.end * peaks.length));
   const visibleCount = Math.max(1, endIdx - startIdx);
   const barWidth = width / visibleCount;
+  const palette = options.palette ?? "hot";
+  const barCtx = {
+    baseColor: resolveCanvasColor(canvas, color),
+    accentColor: resolveCanvasColor(canvas, options.accentColor ?? color),
+    loopAccentColor: resolveCanvasColor(canvas, options.accentColor ?? "var(--c-waveform-accent)"),
+    palette,
+    colorGuidance: options.colorGuidance,
+  };
+  const needsPerBarColor =
+    Boolean(selection) ||
+    (Boolean(loopRegion) && loopActive) ||
+    (options.colorGuidance?.length ?? 0) > 0 ||
+    palette === "mono";
 
-  for (let i = 0; i < visibleCount; i++) {
-    const peakIndex = startIdx + i;
-    const peak = peaks[peakIndex] ?? 0;
-    const barHeight = Math.max(1, peak * peakScale * (height / 2 - 1));
-    const x = i * barWidth;
-    const normalized = peakIndex / peaks.length;
-    const inSelection =
-      selection &&
-      normalized >= selection.start &&
-      normalized <= selection.end;
-    const inLoop =
-      loopRegion &&
-      normalized >= clamp01(loopRegion.start) &&
-      normalized <= clamp01(loopRegion.end);
-    ctx.fillStyle = barColor(
-      canvas,
-      options,
-      peakIndex,
-      peaks.length,
-      peak,
-      Boolean(inSelection),
-      Boolean(inLoop),
-    );
-    ctx.fillRect(x, centerY - barHeight, Math.max(1, barWidth), barHeight * 2);
+  if (!needsPerBarColor) {
+    ctx.fillStyle = barCtx.baseColor;
+    for (let i = 0; i < visibleCount; i++) {
+      const peakIndex = startIdx + i;
+      const peak = peaks[peakIndex] ?? 0;
+      const barHeight = Math.max(1, peak * peakScale * (height / 2 - 1));
+      const x = i * barWidth;
+      ctx.fillRect(x, centerY - barHeight, Math.max(1, barWidth), barHeight * 2);
+    }
+  } else {
+    let currentColor = "";
+    for (let i = 0; i < visibleCount; i++) {
+      const peakIndex = startIdx + i;
+      const peak = peaks[peakIndex] ?? 0;
+      const barHeight = Math.max(1, peak * peakScale * (height / 2 - 1));
+      const x = i * barWidth;
+      const normalized = peakIndex / peaks.length;
+      const inSelection =
+        selection &&
+        normalized >= selection.start &&
+        normalized <= selection.end;
+      const inLoop =
+        loopRegion &&
+        normalized >= clamp01(loopRegion.start) &&
+        normalized <= clamp01(loopRegion.end);
+      const nextColor = barColorResolved(
+        barCtx,
+        peakIndex,
+        peaks.length,
+        peak,
+        Boolean(inSelection),
+        Boolean(inLoop),
+        loopActive,
+      );
+      if (nextColor !== currentColor) {
+        ctx.fillStyle = nextColor;
+        currentColor = nextColor;
+      }
+      ctx.fillRect(x, centerY - barHeight, Math.max(1, barWidth), barHeight * 2);
+    }
   }
 
   if (beatGrid) {
@@ -416,7 +401,7 @@ export function drawWaveform(
 
   if (showPlayhead && playhead !== undefined && isInView(playhead, viewRange)) {
     const x = toScreenX(playhead, viewRange, width);
-    ctx.strokeStyle = resolveColor(canvas, "var(--c-text-primary)");
+    ctx.strokeStyle = resolveCanvasColor(canvas, "var(--c-text-primary)");
     ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.moveTo(x + 0.5, 0);

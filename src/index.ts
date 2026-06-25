@@ -11,6 +11,11 @@ export {
   type AccentProp,
 } from "./lib/accent.js";
 export {
+  clearCanvasColorCache,
+  normalizeCanvasColor,
+  resolveCanvasColor,
+} from "./lib/canvas-color.js";
+export {
   THEME_ATTRIBUTE,
   type ThemeProvider,
   type ThemeProviderOptions,

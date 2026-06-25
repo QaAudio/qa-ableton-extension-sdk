@@ -20,15 +20,41 @@ const canvasRef = ref<HTMLCanvasElement | null>(null);
 let resizeObserver: ResizeObserver | null = null;
 let themeObserver: MutationObserver | null = null;
 
-function redraw(): void {
+let lastWidth = -1;
+let lastHeight = -1;
+let lastDpr = -1;
+let lastPeaks: number[] | null = null;
+let lastColor = "";
+
+function redraw(force = false): void {
   const canvas = canvasRef.value;
   const root = rootRef.value;
   if (!canvas || !root) return;
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
+
+  const width = root.clientWidth;
+  const dpr = window.devicePixelRatio || 1;
+  if (
+    !force &&
+    width === lastWidth &&
+    props.height === lastHeight &&
+    dpr === lastDpr &&
+    props.peaks === lastPeaks &&
+    props.color === lastColor
+  ) {
+    return;
+  }
+
+  lastWidth = width;
+  lastHeight = props.height;
+  lastDpr = dpr;
+  lastPeaks = props.peaks;
+  lastColor = props.color;
+
   drawWaveform(canvas, ctx, {
     peaks: props.peaks,
-    width: root.clientWidth,
+    width,
     height: props.height,
     color: props.color,
     showPlayhead: false,
@@ -36,12 +62,12 @@ function redraw(): void {
 }
 
 onMounted(() => {
-  redraw();
+  redraw(true);
   if (rootRef.value) {
     resizeObserver = new ResizeObserver(() => redraw());
     resizeObserver.observe(rootRef.value);
   }
-  themeObserver = new MutationObserver(() => redraw());
+  themeObserver = new MutationObserver(() => redraw(true));
   themeObserver.observe(document.documentElement, {
     attributes: true,
     attributeFilter: ["data-qa-theme"],
@@ -53,7 +79,10 @@ onUnmounted(() => {
   themeObserver?.disconnect();
 });
 
-watch(() => [props.peaks, props.height, props.color], () => redraw(), { deep: true });
+watch(
+  () => [props.peaks, props.height, props.color] as const,
+  () => redraw(),
+);
 </script>
 
 <template>
