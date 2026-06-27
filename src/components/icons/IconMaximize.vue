@@ -1,16 +1,10 @@
+<script setup lang="ts">
+import WindowMaximizeIcon from "vue-material-design-icons/WindowMaximize.vue";
+import QaMdiIcon from "./QaMdiIcon.vue";
+
+withDefaults(defineProps<{ size?: number }>(), { size: 16 });
+</script>
+
 <template>
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="16"
-    height="16"
-    viewBox="0 0 16 16"
-    fill="none"
-    stroke="currentColor"
-    stroke-linecap="round"
-    stroke-linejoin="round"
-    class="qa-icon"
-    aria-hidden="true"
-  >
-    <rect x="3.5" y="3.5" width="9" height="9" rx="1" />
-  </svg>
+  <QaMdiIcon :icon="WindowMaximizeIcon" :size="size" />
 </template>

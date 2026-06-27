@@ -33,6 +33,8 @@ export type {
 } from "./QaWaveform.vue";
 export { default as QaWaveformThumb } from "./QaWaveformThumb.vue";
 
+export { default as QaMdiIcon } from "./icons/QaMdiIcon.vue";
+
 export { default as IconCode } from "./icons/IconCode.vue";
 export { default as IconInfo } from "./icons/IconInfo.vue";
 export { default as IconLink } from "./icons/IconLink.vue";

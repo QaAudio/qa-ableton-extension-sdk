@@ -99,6 +99,7 @@
   border-radius: 0.35rem;
 }
 
+.qa-icon-button .qa-icon,
 .qa-icon-button svg {
   display: block;
   flex-shrink: 0;

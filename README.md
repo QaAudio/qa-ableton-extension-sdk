@@ -180,6 +180,29 @@ Requires **Node ≥ 24** for typechecking.
 | `QaBadge` | Numeric/status badge |
 | `QaLed` | Tiny round indicator |
 
+### Icons
+
+Icons use [vue-material-design-icons](https://www.npmjs.com/package/vue-material-design-icons) via the `QaMdiIcon` wrapper and named `Icon*` exports (`IconClose`, `IconPlay`, `IconLoader`, …). Import icons per file for tree-shaking:
+
+```vue
+<script setup lang="ts">
+import { QaIconButton, QaMdiIcon } from "@quantumaudio/ableton-extension-sdk/vue";
+import RefreshIcon from "vue-material-design-icons/Refresh.vue";
+</script>
+
+<template>
+  <QaIconButton aria-label="Refresh">
+    <QaMdiIcon :icon="RefreshIcon" :size="16" />
+  </QaIconButton>
+</template>
+```
+
+- **`QaMdiIcon`** — normalizes MDI size (default 16px), `currentColor`, and the `qa-icon` / `qa-icon-loader` classes.
+- **`Icon*`** — stable SDK exports for common chrome (window controls, transport, zoom, theme). Prefer these when available.
+- **Custom SVG** — only when MDI has no suitable glyph (e.g. brand-specific artwork). Keep the same `qa-icon` class and 16–20px sizing.
+
+Optional Vite alias: `@mdi` → `vue-material-design-icons` (see QuantumAgent `vite.config.ts`).
+
 ### Parameters
 
 | Component | Purpose |

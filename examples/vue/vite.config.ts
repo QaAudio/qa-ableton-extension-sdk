@@ -33,6 +33,10 @@ export default defineConfig({
         find: "@quantumaudio/ableton-extension-sdk",
         replacement: path.resolve(packageRoot, "src/index.ts"),
       },
+      {
+        find: "@mdi",
+        replacement: path.resolve(packageRoot, "../../node_modules/vue-material-design-icons"),
+      },
     ],
   },
   server: {

@@ -1,3 +1,9 @@
 .qa-icon {
-  stroke-width: var(--qa-icon-stroke-width, 1);
+  display: inline-flex;
+  line-height: 0;
+  vertical-align: middle;
+}
+
+.qa-icon .material-design-icon__svg {
+  display: block;
 }

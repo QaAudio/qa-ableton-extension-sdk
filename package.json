@@ -35,6 +35,9 @@
   "engines": {
     "node": ">=24.14.1"
   },
+  "dependencies": {
+    "vue-material-design-icons": "^5.3.1"
+  },
   "peerDependencies": {
     "vue": "^3.5.0"
   },

@@ -1,16 +1,10 @@
+<script setup lang="ts">
+import WeatherNightIcon from "vue-material-design-icons/WeatherNight.vue";
+import QaMdiIcon from "./QaMdiIcon.vue";
+
+withDefaults(defineProps<{ size?: number }>(), { size: 16 });
+</script>
+
 <template>
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="16"
-    height="16"
-    viewBox="0 0 16 16"
-    fill="none"
-    stroke="currentColor"
-    stroke-linecap="round"
-    stroke-linejoin="round"
-    class="qa-icon"
-    aria-hidden="true"
-  >
-    <path d="M11.5 2.5a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11Z" />
-  </svg>
+  <QaMdiIcon :icon="WeatherNightIcon" :size="size" />
 </template>

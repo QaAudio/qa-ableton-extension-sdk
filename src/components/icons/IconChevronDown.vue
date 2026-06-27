@@ -1,16 +1,10 @@
+<script setup lang="ts">
+import ChevronDownIcon from "vue-material-design-icons/ChevronDown.vue";
+import QaMdiIcon from "./QaMdiIcon.vue";
+
+withDefaults(defineProps<{ size?: number }>(), { size: 16 });
+</script>
+
 <template>
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="16"
-    height="16"
-    viewBox="0 0 16 16"
-    fill="none"
-    stroke="currentColor"
-    stroke-linecap="round"
-    stroke-linejoin="round"
-    class="qa-icon"
-    aria-hidden="true"
-  >
-    <path d="M4 6l4 4 4-4" />
-  </svg>
+  <QaMdiIcon :icon="ChevronDownIcon" :size="size" />
 </template>
