@@ -25,7 +25,7 @@ const ariaLabel = computed(() =>
 <template>
   <QaIconButton
     v-if="embedded"
-    :active="isDark"
+    :active="false"
     :aria-label="ariaLabel"
     title="Toggle theme"
     @click="toggleTheme()"
