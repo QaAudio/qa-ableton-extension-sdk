@@ -8,11 +8,13 @@ const props = withDefaults(
     active?: boolean;
     highlight?: boolean;
     accent?: AccentProp;
+    variant?: "default" | "ghost";
     type?: "button" | "submit";
     title?: string;
     ariaLabel?: string;
   }>(),
   {
+    variant: "ghost",
     type: "button",
   },
 );
@@ -24,7 +26,10 @@ const accentClassList = computed(() => accentClasses(props.accent));
   <button
     :type="type"
     class="qa-button qa-icon-button"
-    :class="[{ 'qa-button--highlight': highlight }, accentClassList]"
+    :class="[
+      { 'qa-button--highlight': highlight, 'qa-button--ghost': variant === 'ghost' },
+      accentClassList,
+    ]"
     :disabled="disabled"
     :aria-pressed="active ? 'true' : undefined"
     :aria-label="ariaLabel"

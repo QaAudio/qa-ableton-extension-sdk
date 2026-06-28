@@ -25,7 +25,8 @@
   color: var(--c-text-primary);
 }
 
-.qa-window-controls__btn--close.qa-button:hover {
+.qa-window-controls__btn--close.qa-button:hover,
+.qa-window-controls__btn--close.qa-button:active {
   background-color: var(--c-highlight--primary);
-  color: var(--c-control-on-foreground);
+  color: var(--c-text-primary);
 }

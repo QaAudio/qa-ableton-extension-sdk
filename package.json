@@ -24,6 +24,7 @@
     "./label.css": "./src/components/label.css",
     "./layout.css": "./src/components/layout.css",
     "./input.css": "./src/components/input.css",
+    "./menu.css": "./src/components/menu.css",
     "./styles.css": "./src/styles.css"
   },
   "scripts": {

@@ -369,6 +369,8 @@ Apply classes **directly on each control** — accent does not cascade from a pa
 
 `highlight` (toolbar toggle pattern) and `accent` (chromatic CTA / custom fill hue) are separate — use `highlight` + `active` for neutral-until-active toolbar buttons.
 
+`variant="ghost"` removes the pill border for list rows, sidebar items, and section toggles. `QaIconButton` defaults to ghost; pass `variant="default"` when you need the bordered chrome.
+
 **2. Vue panel** — steal a layout from the gallery or compose your own:
 
 ```vue

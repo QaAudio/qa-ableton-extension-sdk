@@ -146,7 +146,7 @@ html.qa-root body {
 
 .qa-button--highlight[data-active="true"] {
   background-color: var(--c-highlight--primary);
-  color: var(--c-text-on-highlight, #081018);
+  color: var(--c-text-on-highlight, #081018) !important;
   border-color: transparent;
 }
 

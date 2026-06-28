@@ -21,8 +21,35 @@
   background-color: var(--c-control-bg--400);
 }
 
-.qa-button:active:not(.qa-accent):not(.qa-accent-red):not(.qa-accent-blue):not(.qa-accent-green):not(.qa-accent-purple),
-.qa-button[aria-pressed="true"]:not(.qa-accent):not(.qa-accent-red):not(.qa-accent-blue):not(.qa-accent-green):not(.qa-accent-purple) {
+/* Borderless list / sidebar / chrome control (chart tree-row hover). */
+.qa-button--ghost {
+  background-color: transparent;
+  border-color: transparent;
+  border-radius: var(--qa-radius-md);
+  color: var(--c-text-primary);
+}
+
+.qa-button--ghost:hover:not(:disabled):not(.qa-accent):not(.qa-accent-red):not(.qa-accent-blue):not(.qa-accent-green):not(.qa-accent-purple) {
+  background-color: var(--c-control-bg--300);
+}
+
+.qa-button--ghost:active:not(.qa-window-controls__btn):not(.qa-accent):not(.qa-accent-red):not(.qa-accent-blue):not(.qa-accent-green):not(.qa-accent-purple):not(.qa-button--highlight),
+.qa-button--ghost[aria-pressed="true"]:not(.qa-window-controls__btn):not(.qa-accent):not(.qa-accent-red):not(.qa-accent-blue):not(.qa-accent-green):not(.qa-accent-purple):not(.qa-button--highlight) {
+  color: var(--c-text-primary);
+  background-color: var(--c-control-bg--400);
+  border-color: transparent;
+}
+
+.qa-button--ghost.qa-button--highlight:active:not(.qa-accent):not(.qa-accent-red):not(.qa-accent-blue):not(.qa-accent-green):not(.qa-accent-purple),
+.qa-button--ghost.qa-button--highlight[data-active="true"]:not(.qa-accent):not(.qa-accent-red):not(.qa-accent-blue):not(.qa-accent-green):not(.qa-accent-purple),
+.qa-button--ghost.qa-button--highlight[aria-pressed="true"]:not(.qa-accent):not(.qa-accent-red):not(.qa-accent-blue):not(.qa-accent-green):not(.qa-accent-purple) {
+  color: var(--c-text-primary);
+  background-color: var(--c-highlight--primary);
+  border-color: transparent;
+}
+
+.qa-button:active:not(.qa-button--ghost):not(.qa-accent):not(.qa-accent-red):not(.qa-accent-blue):not(.qa-accent-green):not(.qa-accent-purple),
+.qa-button[aria-pressed="true"]:not(.qa-button--ghost):not(.qa-accent):not(.qa-accent-red):not(.qa-accent-blue):not(.qa-accent-green):not(.qa-accent-purple) {
   color: var(--c-control-on-foreground);
   background-color: var(--c-highlight--primary);
 }

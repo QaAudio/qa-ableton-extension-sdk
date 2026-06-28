@@ -1,0 +1,43 @@
+.qa-menu {
+  position: fixed;
+  z-index: 10000;
+  background: var(--c-control-bg--500);
+  border: 1px solid var(--c-control-border);
+  border-radius: 0.35rem;
+  box-shadow: 0 4px 12px color-mix(in oklch, black 35%, transparent);
+  padding: 0.2em 0;
+  min-width: 10rem;
+}
+
+.qa-menu .qa-button.qa-menu__item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 0.35em;
+  padding: 0.35em 0.65em;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: var(--c-text-primary);
+  font: inherit;
+  font-size: 0.92em;
+  text-align: left;
+  justify-content: flex-start;
+  white-space: nowrap;
+}
+
+.qa-menu .qa-button.qa-menu__item:hover:not(:disabled) {
+  background: var(--c-control-bg--300);
+}
+
+.qa-menu .qa-button.qa-menu__item:disabled {
+  opacity: 0.45;
+}
+
+.qa-menu .qa-button.qa-menu__item.qa-menu__item--danger {
+  color: var(--c-error);
+}
+
+.qa-menu .qa-button.qa-menu__item.qa-menu__item--danger:hover:not(:disabled) {
+  background: color-mix(in oklch, var(--c-error) 12%, transparent);
+}

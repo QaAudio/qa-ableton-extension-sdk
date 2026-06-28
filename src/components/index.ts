@@ -9,6 +9,8 @@ export { default as QaThemeToggle } from "./ThemeToggle.vue";
 export { default as QaAutocomplete } from "./QaAutocomplete.vue";
 export { default as QaTextInput } from "./QaTextInput.vue";
 export { default as QaDialog } from "./QaDialog.vue";
+export { default as QaMenu } from "./QaMenu.vue";
+export { default as QaMenuItem } from "./QaMenuItem.vue";
 export { default as QaWindowControls } from "./QaWindowControls.vue";
 export { default as QaSlider } from "./QaSlider.vue";
 export { default as QaKnob } from "./QaKnob.vue";
