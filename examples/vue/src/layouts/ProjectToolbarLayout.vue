@@ -30,7 +30,7 @@ const projects = [
 
 <template>
   <component :is="embedded ? 'div' : 'main'" class="project-toolbar-root" :class="{ 'layout-root': !embedded }">
-    <QaPanel v-if="!embedded" label="Project picker" subtitle="Toolbar row from Intricator / Atlas UIs">
+    <QaPanel v-if="!embedded" label="Project picker" subtitle="Toolbar row from Intricator UIs">
       <div class="project-toolbar">
         <QaButtonGroup>
           <QaButton highlight :active="linkActive" @click="linkActive = !linkActive">
