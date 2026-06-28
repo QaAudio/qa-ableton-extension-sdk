@@ -42,7 +42,7 @@ const layouts: { id: LayoutId; label: string; blurb: string }[] = [
     id: "extension-shell",
     label: "Extension shell",
     blurb:
-      "Toolbar, transport, tabbed particles/mixer/macros panel, status bar — the Intricator-shaped sandwich.",
+      "Toolbar, transport, tabbed particles/mixer/macros panel, status bar — full extension UI sandwich.",
   },
   {
     id: "effect-panel",
