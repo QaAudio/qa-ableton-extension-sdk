@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted } from "vue";
+import { computed, onMounted, onUnmounted } from "vue";
 
 const props = withDefaults(
   defineProps<{
     title?: string;
     open?: boolean;
+    width?: "small" | "medium" | "full";
   }>(),
   {
     open: false,
+    width: "small",
   },
 );
 
@@ -21,6 +23,17 @@ function onKeyDown(event: KeyboardEvent): void {
   }
 }
 
+const widthClass = computed(() => {
+  switch (props.width) {
+    case "small":
+      return "qa-dialog--small";
+    case "medium":
+      return "qa-dialog--medium";
+    case "full":
+      return "qa-dialog--full";
+  }
+});
+
 onMounted(() => {
   document.addEventListener("keydown", onKeyDown);
 });
@@ -32,7 +45,7 @@ onUnmounted(() => {
 
 <template>
   <div v-if="open" class="qa-dialog-overlay" @click.self="emit('close')">
-    <section class="qa-dialog" role="dialog" :aria-label="title">
+    <section class="qa-dialog" role="dialog" :aria-label="title" :class="widthClass">
       <header v-if="title" class="qa-dialog__header">
         <h2 class="qa-dialog__title">{{ title }}</h2>
       </header>
@@ -59,13 +72,24 @@ onUnmounted(() => {
 }
 
 .qa-dialog {
-  width: min(100%, 22rem);
   background: var(--c-panel-bg);
   border: 1px solid var(--c-control-border);
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
   padding: 1rem;
+}
+
+.qa-dialog--small {
+  width: min(100%, 42rem);
+}
+
+.qa-dialog--medium {
+  width: min(100%, 60rem);
+}
+
+.qa-dialog--full {
+  width: min(100%, 80rem);
 }
 
 .qa-dialog__title {
