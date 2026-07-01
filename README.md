@@ -422,7 +422,7 @@ npm run dev:examples   # Vue layout gallery
 | Project | Repo |
 |---------|------|
 | MCP + Live agent stack | [qa-ableton-mcp](https://github.com/QaAudio/qa-ableton-mcp) |
-| Knowledge / SDK docs search | [qa-knowledge](https://github.com/QaAudio/qa-knowledge) + [qa-knowledge-mcp](https://github.com/QaAudio/qa-knowledge-mcp) |
+| Knowledge / SDK docs search | [qa-knowledge](https://github.com/QaAudio/qa-knowledge) + [qa-library-mcp](https://github.com/QaAudio/qa-library-mcp) (`search_knowledge`, `get_knowledge_chunk`) |
 
 ---
 
